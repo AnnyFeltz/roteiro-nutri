@@ -3,12 +3,12 @@ import { Home, UtensilsCrossed, TrendingUp, User as UserIcon } from "lucide-reac
 import { useStore } from "@/lib/mock-store";
 import { useEffect } from "react";
 
-const TABS = [
+const TABS: { to: string; label: string; icon: typeof Home; exact?: boolean }[] = [
   { to: "/app", label: "Início", icon: Home, exact: true },
   { to: "/app/plano", label: "Plano", icon: UtensilsCrossed },
   { to: "/app/evolucao", label: "Evolução", icon: TrendingUp },
   { to: "/app/perfil", label: "Perfil", icon: UserIcon },
-] as const;
+];
 
 export function PatientShell() {
   const { session } = useStore();
