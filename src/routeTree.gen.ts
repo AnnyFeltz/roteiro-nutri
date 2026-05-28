@@ -9,38 +9,247 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as NutriRouteImport } from './routes/nutri'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NutriIndexRouteImport } from './routes/nutri.index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as PacienteLoginRouteImport } from './routes/paciente.login'
+import { Route as NutriPacientesRouteImport } from './routes/nutri.pacientes'
+import { Route as AppPlanoRouteImport } from './routes/app.plano'
+import { Route as AppPerfilRouteImport } from './routes/app.perfil'
+import { Route as AppEvolucaoRouteImport } from './routes/app.evolucao'
+import { Route as NutriPacientesIdRouteImport } from './routes/nutri.pacientes.$id'
+import { Route as NutriPacientesIdPlanoRouteImport } from './routes/nutri.pacientes.$id.plano'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NutriRoute = NutriRouteImport.update({
+  id: '/nutri',
+  path: '/nutri',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NutriIndexRoute = NutriIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NutriRoute,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const PacienteLoginRoute = PacienteLoginRouteImport.update({
+  id: '/paciente/login',
+  path: '/paciente/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NutriPacientesRoute = NutriPacientesRouteImport.update({
+  id: '/pacientes',
+  path: '/pacientes',
+  getParentRoute: () => NutriRoute,
+} as any)
+const AppPlanoRoute = AppPlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPerfilRoute = AppPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEvolucaoRoute = AppEvolucaoRouteImport.update({
+  id: '/evolucao',
+  path: '/evolucao',
+  getParentRoute: () => AppRoute,
+} as any)
+const NutriPacientesIdRoute = NutriPacientesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NutriPacientesRoute,
+} as any)
+const NutriPacientesIdPlanoRoute = NutriPacientesIdPlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => NutriPacientesIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/nutri': typeof NutriRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/app/evolucao': typeof AppEvolucaoRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/plano': typeof AppPlanoRoute
+  '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
+  '/paciente/login': typeof PacienteLoginRoute
+  '/app/': typeof AppIndexRoute
+  '/nutri/': typeof NutriIndexRoute
+  '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/app/evolucao': typeof AppEvolucaoRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/plano': typeof AppPlanoRoute
+  '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
+  '/paciente/login': typeof PacienteLoginRoute
+  '/app': typeof AppIndexRoute
+  '/nutri': typeof NutriIndexRoute
+  '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/nutri': typeof NutriRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/app/evolucao': typeof AppEvolucaoRoute
+  '/app/perfil': typeof AppPerfilRoute
+  '/app/plano': typeof AppPlanoRoute
+  '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
+  '/paciente/login': typeof PacienteLoginRoute
+  '/app/': typeof AppIndexRoute
+  '/nutri/': typeof NutriIndexRoute
+  '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/forgot-password'
+    | '/login'
+    | '/nutri'
+    | '/signup'
+    | '/app/evolucao'
+    | '/app/perfil'
+    | '/app/plano'
+    | '/nutri/pacientes'
+    | '/paciente/login'
+    | '/app/'
+    | '/nutri/'
+    | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/$id/plano'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/signup'
+    | '/app/evolucao'
+    | '/app/perfil'
+    | '/app/plano'
+    | '/nutri/pacientes'
+    | '/paciente/login'
+    | '/app'
+    | '/nutri'
+    | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/$id/plano'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/forgot-password'
+    | '/login'
+    | '/nutri'
+    | '/signup'
+    | '/app/evolucao'
+    | '/app/perfil'
+    | '/app/plano'
+    | '/nutri/pacientes'
+    | '/paciente/login'
+    | '/app/'
+    | '/nutri/'
+    | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/$id/plano'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LoginRoute: typeof LoginRoute
+  NutriRoute: typeof NutriRouteWithChildren
+  SignupRoute: typeof SignupRoute
+  PacienteLoginRoute: typeof PacienteLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nutri': {
+      id: '/nutri'
+      path: '/nutri'
+      fullPath: '/nutri'
+      preLoaderRoute: typeof NutriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +257,132 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/nutri/': {
+      id: '/nutri/'
+      path: '/'
+      fullPath: '/nutri/'
+      preLoaderRoute: typeof NutriIndexRouteImport
+      parentRoute: typeof NutriRoute
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/paciente/login': {
+      id: '/paciente/login'
+      path: '/paciente/login'
+      fullPath: '/paciente/login'
+      preLoaderRoute: typeof PacienteLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nutri/pacientes': {
+      id: '/nutri/pacientes'
+      path: '/pacientes'
+      fullPath: '/nutri/pacientes'
+      preLoaderRoute: typeof NutriPacientesRouteImport
+      parentRoute: typeof NutriRoute
+    }
+    '/app/plano': {
+      id: '/app/plano'
+      path: '/plano'
+      fullPath: '/app/plano'
+      preLoaderRoute: typeof AppPlanoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/perfil': {
+      id: '/app/perfil'
+      path: '/perfil'
+      fullPath: '/app/perfil'
+      preLoaderRoute: typeof AppPerfilRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/evolucao': {
+      id: '/app/evolucao'
+      path: '/evolucao'
+      fullPath: '/app/evolucao'
+      preLoaderRoute: typeof AppEvolucaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/nutri/pacientes/$id': {
+      id: '/nutri/pacientes/$id'
+      path: '/$id'
+      fullPath: '/nutri/pacientes/$id'
+      preLoaderRoute: typeof NutriPacientesIdRouteImport
+      parentRoute: typeof NutriPacientesRoute
+    }
+    '/nutri/pacientes/$id/plano': {
+      id: '/nutri/pacientes/$id/plano'
+      path: '/plano'
+      fullPath: '/nutri/pacientes/$id/plano'
+      preLoaderRoute: typeof NutriPacientesIdPlanoRouteImport
+      parentRoute: typeof NutriPacientesIdRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppEvolucaoRoute: typeof AppEvolucaoRoute
+  AppPerfilRoute: typeof AppPerfilRoute
+  AppPlanoRoute: typeof AppPlanoRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppEvolucaoRoute: AppEvolucaoRoute,
+  AppPerfilRoute: AppPerfilRoute,
+  AppPlanoRoute: AppPlanoRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface NutriPacientesIdRouteChildren {
+  NutriPacientesIdPlanoRoute: typeof NutriPacientesIdPlanoRoute
+}
+
+const NutriPacientesIdRouteChildren: NutriPacientesIdRouteChildren = {
+  NutriPacientesIdPlanoRoute: NutriPacientesIdPlanoRoute,
+}
+
+const NutriPacientesIdRouteWithChildren =
+  NutriPacientesIdRoute._addFileChildren(NutriPacientesIdRouteChildren)
+
+interface NutriPacientesRouteChildren {
+  NutriPacientesIdRoute: typeof NutriPacientesIdRouteWithChildren
+}
+
+const NutriPacientesRouteChildren: NutriPacientesRouteChildren = {
+  NutriPacientesIdRoute: NutriPacientesIdRouteWithChildren,
+}
+
+const NutriPacientesRouteWithChildren = NutriPacientesRoute._addFileChildren(
+  NutriPacientesRouteChildren,
+)
+
+interface NutriRouteChildren {
+  NutriPacientesRoute: typeof NutriPacientesRouteWithChildren
+  NutriIndexRoute: typeof NutriIndexRoute
+}
+
+const NutriRouteChildren: NutriRouteChildren = {
+  NutriPacientesRoute: NutriPacientesRouteWithChildren,
+  NutriIndexRoute: NutriIndexRoute,
+}
+
+const NutriRouteWithChildren = NutriRoute._addFileChildren(NutriRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  LoginRoute: LoginRoute,
+  NutriRoute: NutriRouteWithChildren,
+  SignupRoute: SignupRoute,
+  PacienteLoginRoute: PacienteLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
