@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useEffect } from "react";
 
-const NAV = [
+const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/nutri", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/nutri/pacientes", label: "Pacientes", icon: Users },
   { to: "/nutri/agenda", label: "Agenda", icon: ClipboardList },
@@ -16,7 +16,7 @@ const NAV = [
   { to: "/nutri/evolucao", label: "Evolução", icon: TrendingUp },
   { to: "/nutri/relatorios", label: "Relatórios", icon: FileText },
   { to: "/nutri/configuracoes", label: "Configurações", icon: Settings },
-] as const;
+];
 
 export function NutriShell() {
   const { session, nutritionist, logout } = useStore();
