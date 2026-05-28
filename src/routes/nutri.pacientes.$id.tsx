@@ -73,7 +73,7 @@ function PatientDetail() {
         </TabsContent>
 
         <TabsContent value="anamnese" className="mt-5">
-          <AnamneseTab p={p} onSave={(data) => { updatePatient(p.id, data); toast.success("Anamnese atualizada"); }} />
+          <AnamneseTab p={p} onSave={(data: any) => { updatePatient(p.id, data); toast.success("Anamnese atualizada"); }} />
         </TabsContent>
 
         <TabsContent value="avaliacao" className="mt-5">

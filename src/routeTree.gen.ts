@@ -13,10 +13,13 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as NutriRouteImport } from './routes/nutri'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as NutriIndexRouteImport } from './routes/nutri.index'
 import { Route as PacienteLoginRouteImport } from './routes/paciente.login'
 import { Route as NutriPacientesRouteImport } from './routes/nutri.pacientes'
+import { Route as NutriPacientesIdRouteImport } from './routes/nutri.pacientes.$id'
+import { Route as NutriPacientesIdPlanoRouteImport } from './routes/nutri.pacientes.$id.plano'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -36,6 +39,11 @@ const LoginRoute = LoginRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -58,41 +66,61 @@ const NutriPacientesRoute = NutriPacientesRouteImport.update({
   path: '/pacientes',
   getParentRoute: () => NutriRoute,
 } as any)
+const NutriPacientesIdRoute = NutriPacientesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NutriPacientesRoute,
+} as any)
+const NutriPacientesIdPlanoRoute = NutriPacientesIdPlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => NutriPacientesIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/nutri': typeof NutriRouteWithChildren
   '/signup': typeof SignupRoute
-  '/nutri/pacientes': typeof NutriPacientesRoute
+  '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/paciente/login': typeof PacienteLoginRoute
   '/nutri/': typeof NutriIndexRoute
+  '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/nutri/pacientes': typeof NutriPacientesRoute
+  '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/paciente/login': typeof PacienteLoginRoute
   '/nutri': typeof NutriIndexRoute
+  '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/nutri': typeof NutriRouteWithChildren
   '/signup': typeof SignupRoute
-  '/nutri/pacientes': typeof NutriPacientesRoute
+  '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/paciente/login': typeof PacienteLoginRoute
   '/nutri/': typeof NutriIndexRoute
+  '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/forgot-password'
     | '/login'
     | '/nutri'
@@ -100,18 +128,24 @@ export interface FileRouteTypes {
     | '/nutri/pacientes'
     | '/paciente/login'
     | '/nutri/'
+    | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/$id/plano'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/app'
     | '/forgot-password'
     | '/login'
     | '/signup'
     | '/nutri/pacientes'
     | '/paciente/login'
     | '/nutri'
+    | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/$id/plano'
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/forgot-password'
     | '/login'
     | '/nutri'
@@ -119,10 +153,13 @@ export interface FileRouteTypes {
     | '/nutri/pacientes'
     | '/paciente/login'
     | '/nutri/'
+    | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/$id/plano'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   NutriRoute: typeof NutriRouteWithChildren
@@ -160,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -188,16 +232,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NutriPacientesRouteImport
       parentRoute: typeof NutriRoute
     }
+    '/nutri/pacientes/$id': {
+      id: '/nutri/pacientes/$id'
+      path: '/$id'
+      fullPath: '/nutri/pacientes/$id'
+      preLoaderRoute: typeof NutriPacientesIdRouteImport
+      parentRoute: typeof NutriPacientesRoute
+    }
+    '/nutri/pacientes/$id/plano': {
+      id: '/nutri/pacientes/$id/plano'
+      path: '/plano'
+      fullPath: '/nutri/pacientes/$id/plano'
+      preLoaderRoute: typeof NutriPacientesIdPlanoRouteImport
+      parentRoute: typeof NutriPacientesIdRoute
+    }
   }
 }
 
+interface NutriPacientesIdRouteChildren {
+  NutriPacientesIdPlanoRoute: typeof NutriPacientesIdPlanoRoute
+}
+
+const NutriPacientesIdRouteChildren: NutriPacientesIdRouteChildren = {
+  NutriPacientesIdPlanoRoute: NutriPacientesIdPlanoRoute,
+}
+
+const NutriPacientesIdRouteWithChildren =
+  NutriPacientesIdRoute._addFileChildren(NutriPacientesIdRouteChildren)
+
+interface NutriPacientesRouteChildren {
+  NutriPacientesIdRoute: typeof NutriPacientesIdRouteWithChildren
+}
+
+const NutriPacientesRouteChildren: NutriPacientesRouteChildren = {
+  NutriPacientesIdRoute: NutriPacientesIdRouteWithChildren,
+}
+
+const NutriPacientesRouteWithChildren = NutriPacientesRoute._addFileChildren(
+  NutriPacientesRouteChildren,
+)
+
 interface NutriRouteChildren {
-  NutriPacientesRoute: typeof NutriPacientesRoute
+  NutriPacientesRoute: typeof NutriPacientesRouteWithChildren
   NutriIndexRoute: typeof NutriIndexRoute
 }
 
 const NutriRouteChildren: NutriRouteChildren = {
-  NutriPacientesRoute: NutriPacientesRoute,
+  NutriPacientesRoute: NutriPacientesRouteWithChildren,
   NutriIndexRoute: NutriIndexRoute,
 }
 
@@ -205,6 +286,7 @@ const NutriRouteWithChildren = NutriRoute._addFileChildren(NutriRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   NutriRoute: NutriRouteWithChildren,
