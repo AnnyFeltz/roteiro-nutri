@@ -81,7 +81,7 @@ function PatientDetail() {
         </TabsContent>
 
         <TabsContent value="plano" className="mt-5">
-          <PlanoTab p={p} plan={plan} onEdit={() => nav({ to: "/nutri/pacientes/$id/plano", params: { id: p.id } })} />
+          <PlanoTab p={p} plan={plan} onEdit={() => nav({ to: "/nutri/pacientes/$id/plano/$versionId", params: { id: p.id, versionId: plan?.id ?? "new" } })} />
         </TabsContent>
 
         <TabsContent value="evolucao" className="mt-5">
