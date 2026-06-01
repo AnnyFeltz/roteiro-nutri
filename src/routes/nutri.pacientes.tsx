@@ -80,6 +80,9 @@ function PacientesList() {
 }
 
 function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void }) {
+  const { getActivePlan } = useStore();
+  const activePlan = getActivePlan(p.id);
+  const versionId = activePlan?.id ?? "new";
   const initials = p.name.split(" ").map((s) => s[0]).slice(0, 2).join("");
   const imc = (p.weightKg / Math.pow(p.heightCm / 100, 2)).toFixed(1);
   return (
