@@ -9,7 +9,7 @@ import { calcFood, foodIcon, calcMealKcal } from "@/lib/food-utils";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/plano/$mealId")({
+export const Route = createFileRoute("/app/plano_/$mealId")({
   head: () => ({ meta: [{ title: "Refeição — Roteiro Nutri" }] }),
   component: MealDetail,
 });
