@@ -15,7 +15,7 @@ import { calcFood, calcMealKcal, foodIcon } from "@/lib/food-utils";
 import { getFood } from "@/lib/taco-foods";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/nutri/pacientes/$id/plano")({
+export const Route = createFileRoute("/nutri/pacientes/$id/plano_/$versionId")({
   head: () => ({ meta: [{ title: "Editor de Plano — Roteiro Nutri" }] }),
   component: PlanEditor,
 });
