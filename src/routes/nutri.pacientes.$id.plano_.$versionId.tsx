@@ -21,18 +21,21 @@ export const Route = createFileRoute("/nutri/pacientes/$id/plano_/$versionId")({
 });
 
 function PlanEditor() {
-  const { id } = Route.useParams();
-  const { getPatient, getActivePlan, upsertPlan } = useStore();
+  const { id, versionId } = Route.useParams();
+  const { getPatient, getPlanById, getActivePlan, upsertPlan } = useStore();
   const nav = useNavigate();
   const p = getPatient(id);
-  const existing = p && getActivePlan(p.id);
+  const isNew = versionId === "new";
+  const existing = !isNew ? getPlanById(versionId) : undefined;
+  // Fallback: if URL has a version id we don't know but patient has an active plan, use it as a template
+  const template = existing ?? (p ? getActivePlan(p.id) : undefined);
 
   const [formula, setFormula] = useState<"mifflin" | "harris">("mifflin");
   const [activity, setActivity] = useState<ActivityLevel>("moderate");
-  const [macros, setMacros] = useState(existing?.macros ?? { carbs: 40, protein: 30, fat: 30 });
-  const [targetKcal, setTargetKcal] = useState(existing?.targetKcal ?? 1700);
-  const [meals, setMeals] = useState<Meal[]>(existing?.meals ?? defaultMeals());
-  const [planName, setPlanName] = useState(existing?.name ?? "Plano alimentar personalizado");
+  const [macros, setMacros] = useState(template?.macros ?? { carbs: 40, protein: 30, fat: 30 });
+  const [targetKcal, setTargetKcal] = useState(template?.targetKcal ?? 1700);
+  const [meals, setMeals] = useState<Meal[]>(template?.meals ?? defaultMeals());
+  const [planName, setPlanName] = useState(template?.name ?? "Plano alimentar personalizado");
 
   if (!p) return <div>Paciente não encontrado.</div>;
 
@@ -48,15 +51,16 @@ function PlanEditor() {
 
   const save = () => {
     if (sumMacros !== 100) { toast.error("Macros devem somar 100%"); return; }
+    const newId = existing?.id ?? `v${Date.now()}`;
     const plan: MealPlan = {
-      id: existing?.id ?? `plan-${Date.now()}`,
+      id: newId,
       patientId: p.id, name: planName, active: true,
       createdAt: existing?.createdAt ?? new Date().toLocaleDateString("pt-BR"),
       targetKcal, macros, meals, adherenceLog: existing?.adherenceLog ?? {},
     };
     upsertPlan(plan);
-    toast.success(existing ? "Plano atualizado" : "Plano criado e ativado (RN07)");
-    nav({ to: "/nutri/pacientes/$id", params: { id: p.id } });
+    toast.success(existing ? "Versão do plano atualizada" : "Nova versão do plano criada (RN07)");
+    nav({ to: "/nutri/pacientes/$id/plano/$versionId", params: { id: p.id, versionId: newId } });
   };
 
   return (
