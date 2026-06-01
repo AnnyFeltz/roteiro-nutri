@@ -168,7 +168,7 @@ const PATIENTS: Patient[] = [
 
 // Default seed plan for Ana Clara (p1)
 const seedPlan: MealPlan = {
-  id: "plan-p1",
+  id: "v1",
   patientId: "p1",
   name: "Plano - Emagrecimento",
   active: true,
