@@ -303,6 +303,7 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
     },
     getPatient: (id) => patients.find((p) => p.id === id),
     getActivePlan: (patientId) => plans.find((p) => p.patientId === patientId && p.active),
+    getPlanById: (planId) => plans.find((p) => p.id === planId),
     upsertPlan: (plan) => {
       setPlans((prev) => {
         // RN07: ensure only one active plan per patient
