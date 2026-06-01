@@ -238,6 +238,7 @@ interface Store {
   deactivatePatient: (id: string) => void;
   getPatient: (id: string) => Patient | undefined;
   getActivePlan: (patientId: string) => MealPlan | undefined;
+  getPlanById: (planId: string) => MealPlan | undefined;
   upsertPlan: (plan: MealPlan) => void;
   toggleMealConsumed: (planId: string, mealId: string) => void;
   substituteFood: (planId: string, mealId: string, foodIndex: number, newFoodId: string, grams: number) => void;
