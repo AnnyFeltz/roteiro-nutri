@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, MoreHorizontal, UserX } from "lucide-react";
+import { Plus, Search, MoreHorizontal, UserX, Apple } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
@@ -101,6 +101,11 @@ function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void 
       </td>
       <td className="px-3 py-4 text-right">
         <div className="flex justify-end gap-2">
+          <Link to="/nutri/pacientes/$id/plano" params={{ id: p.id }}>
+            <Button variant="outline" size="sm" className="gap-1.5 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary">
+              <Apple className="h-3.5 w-3.5" /> Plano alimentar
+            </Button>
+          </Link>
           <Link to="/nutri/pacientes/$id" params={{ id: p.id }}>
             <Button variant="outline" size="sm">Abrir</Button>
           </Link>

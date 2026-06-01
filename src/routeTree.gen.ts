@@ -23,6 +23,7 @@ import { Route as AppPlanoRouteImport } from './routes/app.plano'
 import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppEvolucaoRouteImport } from './routes/app.evolucao'
 import { Route as NutriPacientesIdRouteImport } from './routes/nutri.pacientes.$id'
+import { Route as AppPlanoMealIdRouteImport } from './routes/app.plano.$mealId'
 import { Route as NutriPacientesIdPlanoRouteImport } from './routes/nutri.pacientes.$id.plano'
 
 const SignupRoute = SignupRouteImport.update({
@@ -95,6 +96,11 @@ const NutriPacientesIdRoute = NutriPacientesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => NutriPacientesRoute,
 } as any)
+const AppPlanoMealIdRoute = AppPlanoMealIdRouteImport.update({
+  id: '/$mealId',
+  path: '/$mealId',
+  getParentRoute: () => AppPlanoRoute,
+} as any)
 const NutriPacientesIdPlanoRoute = NutriPacientesIdPlanoRouteImport.update({
   id: '/plano',
   path: '/plano',
@@ -110,11 +116,12 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/app/evolucao': typeof AppEvolucaoRoute
   '/app/perfil': typeof AppPerfilRoute
-  '/app/plano': typeof AppPlanoRoute
+  '/app/plano': typeof AppPlanoRouteWithChildren
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
+  '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
   '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
@@ -125,11 +132,12 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/app/evolucao': typeof AppEvolucaoRoute
   '/app/perfil': typeof AppPerfilRoute
-  '/app/plano': typeof AppPlanoRoute
+  '/app/plano': typeof AppPlanoRouteWithChildren
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/paciente/login': typeof PacienteLoginRoute
   '/app': typeof AppIndexRoute
   '/nutri': typeof NutriIndexRoute
+  '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
   '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
@@ -143,11 +151,12 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/app/evolucao': typeof AppEvolucaoRoute
   '/app/perfil': typeof AppPerfilRoute
-  '/app/plano': typeof AppPlanoRoute
+  '/app/plano': typeof AppPlanoRouteWithChildren
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
+  '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
   '/nutri/pacientes/$id/plano': typeof NutriPacientesIdPlanoRoute
 }
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
+    | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/pacientes/$id/plano'
   fileRoutesByTo: FileRoutesByTo
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/paciente/login'
     | '/app'
     | '/nutri'
+    | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/pacientes/$id/plano'
   id:
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
+    | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/pacientes/$id/plano'
   fileRoutesById: FileRoutesById
@@ -313,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NutriPacientesIdRouteImport
       parentRoute: typeof NutriPacientesRoute
     }
+    '/app/plano/$mealId': {
+      id: '/app/plano/$mealId'
+      path: '/$mealId'
+      fullPath: '/app/plano/$mealId'
+      preLoaderRoute: typeof AppPlanoMealIdRouteImport
+      parentRoute: typeof AppPlanoRoute
+    }
     '/nutri/pacientes/$id/plano': {
       id: '/nutri/pacientes/$id/plano'
       path: '/plano'
@@ -323,17 +342,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppPlanoRouteChildren {
+  AppPlanoMealIdRoute: typeof AppPlanoMealIdRoute
+}
+
+const AppPlanoRouteChildren: AppPlanoRouteChildren = {
+  AppPlanoMealIdRoute: AppPlanoMealIdRoute,
+}
+
+const AppPlanoRouteWithChildren = AppPlanoRoute._addFileChildren(
+  AppPlanoRouteChildren,
+)
+
 interface AppRouteChildren {
   AppEvolucaoRoute: typeof AppEvolucaoRoute
   AppPerfilRoute: typeof AppPerfilRoute
-  AppPlanoRoute: typeof AppPlanoRoute
+  AppPlanoRoute: typeof AppPlanoRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppEvolucaoRoute: AppEvolucaoRoute,
   AppPerfilRoute: AppPerfilRoute,
-  AppPlanoRoute: AppPlanoRoute,
+  AppPlanoRoute: AppPlanoRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
 
