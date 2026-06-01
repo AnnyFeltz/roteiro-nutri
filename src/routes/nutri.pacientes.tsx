@@ -80,6 +80,9 @@ function PacientesList() {
 }
 
 function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void }) {
+  const { getActivePlan } = useStore();
+  const activePlan = getActivePlan(p.id);
+  const versionId = activePlan?.id ?? "new";
   const initials = p.name.split(" ").map((s) => s[0]).slice(0, 2).join("");
   const imc = (p.weightKg / Math.pow(p.heightCm / 100, 2)).toFixed(1);
   return (
@@ -101,7 +104,7 @@ function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void 
       </td>
       <td className="px-3 py-4 text-right">
         <div className="flex justify-end gap-2">
-          <Link to="/nutri/pacientes/$id/plano" params={{ id: p.id }}>
+          <Link to="/nutri/pacientes/$id/plano/$versionId" params={{ id: p.id, versionId }}>
             <Button variant="outline" size="sm" className="gap-1.5 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary">
               <Apple className="h-3.5 w-3.5" /> Plano alimentar
             </Button>

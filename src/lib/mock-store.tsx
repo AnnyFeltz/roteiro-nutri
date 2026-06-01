@@ -168,7 +168,7 @@ const PATIENTS: Patient[] = [
 
 // Default seed plan for Ana Clara (p1)
 const seedPlan: MealPlan = {
-  id: "plan-p1",
+  id: "v1",
   patientId: "p1",
   name: "Plano - Emagrecimento",
   active: true,
@@ -238,6 +238,7 @@ interface Store {
   deactivatePatient: (id: string) => void;
   getPatient: (id: string) => Patient | undefined;
   getActivePlan: (patientId: string) => MealPlan | undefined;
+  getPlanById: (planId: string) => MealPlan | undefined;
   upsertPlan: (plan: MealPlan) => void;
   toggleMealConsumed: (planId: string, mealId: string) => void;
   substituteFood: (planId: string, mealId: string, foodIndex: number, newFoodId: string, grams: number) => void;
@@ -303,6 +304,7 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
     },
     getPatient: (id) => patients.find((p) => p.id === id),
     getActivePlan: (patientId) => plans.find((p) => p.patientId === patientId && p.active),
+    getPlanById: (planId) => plans.find((p) => p.id === planId),
     upsertPlan: (plan) => {
       setPlans((prev) => {
         // RN07: ensure only one active plan per patient
