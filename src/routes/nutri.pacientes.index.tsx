@@ -13,7 +13,7 @@ import { Plus, Search, MoreHorizontal, UserX, Apple } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/nutri/pacientes")({
+export const Route = createFileRoute("/nutri/pacientes/")({
   head: () => ({ meta: [{ title: "Pacientes — Roteiro Nutri" }] }),
   component: PacientesList,
 });
