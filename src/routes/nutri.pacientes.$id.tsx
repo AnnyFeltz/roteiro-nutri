@@ -54,9 +54,9 @@ function PatientDetail() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Link to="/nutri/pacientes/$id/plano/$versionId" params={{ id: p.id, versionId: plan?.id ?? "new" }}>
-              <Button className="bg-primary hover:bg-leaf-deep gap-2"><Plus className="h-4 w-4" /> {plan ? "Editar plano" : "Novo plano"}</Button>
-            </Link>
+           <Link to="/nutri/pacientes/$id/plano/editar{$versionId}" params={{ id: p.id, versionId: plan?.id ?? "new" }}>
+             <Button className="bg-primary hover:bg-leaf-deep gap-2"><Plus className="h-4 w-4" /> {plan ? "Editar plano" : "Novo plano"}</Button>
+           </Link>
           </div>
         </div>
       </Card>

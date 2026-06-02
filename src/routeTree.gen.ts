@@ -24,6 +24,7 @@ import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppEvolucaoRouteImport } from './routes/app.evolucao'
 import { Route as NutriPacientesIdRouteImport } from './routes/nutri.pacientes.$id'
 import { Route as AppPlanoMealIdRouteImport } from './routes/app.plano_.$mealId'
+import { Route as NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport } from './routes/nutri.pacientes.$id.plano_.editar{$versionId}'
 import { Route as NutriPacientesIdPlanoVersionIdRouteImport } from './routes/nutri.pacientes.$id.plano_.$versionId'
 
 const SignupRoute = SignupRouteImport.update({
@@ -101,6 +102,12 @@ const AppPlanoMealIdRoute = AppPlanoMealIdRouteImport.update({
   path: '/plano/$mealId',
   getParentRoute: () => AppRoute,
 } as any)
+const NutriPacientesIdPlanoEditarChar123versionIdChar125Route =
+  NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport.update({
+    id: '/plano_/editar{$versionId}',
+    path: '/plano/editar{$versionId}',
+    getParentRoute: () => NutriPacientesIdRoute,
+  } as any)
 const NutriPacientesIdPlanoVersionIdRoute =
   NutriPacientesIdPlanoVersionIdRouteImport.update({
     id: '/plano_/$versionId',
@@ -125,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
   '/nutri/pacientes/$id/plano/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
+  '/nutri/pacientes/$id/plano/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -141,6 +149,7 @@ export interface FileRoutesByTo {
   '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
   '/nutri/pacientes/$id/plano/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
+  '/nutri/pacientes/$id/plano/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -160,6 +169,7 @@ export interface FileRoutesById {
   '/app/plano_/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
   '/nutri/pacientes/$id/plano_/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
+  '/nutri/pacientes/$id/plano_/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/pacientes/$id/plano/$versionId'
+    | '/nutri/pacientes/$id/plano/editar{$versionId}'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/pacientes/$id/plano/$versionId'
+    | '/nutri/pacientes/$id/plano/editar{$versionId}'
   id:
     | '__root__'
     | '/'
@@ -214,6 +226,7 @@ export interface FileRouteTypes {
     | '/app/plano_/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/pacientes/$id/plano_/$versionId'
+    | '/nutri/pacientes/$id/plano_/editar{$versionId}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -333,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlanoMealIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/nutri/pacientes/$id/plano_/editar{$versionId}': {
+      id: '/nutri/pacientes/$id/plano_/editar{$versionId}'
+      path: '/plano/editar{$versionId}'
+      fullPath: '/nutri/pacientes/$id/plano/editar{$versionId}'
+      preLoaderRoute: typeof NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport
+      parentRoute: typeof NutriPacientesIdRoute
+    }
     '/nutri/pacientes/$id/plano_/$versionId': {
       id: '/nutri/pacientes/$id/plano_/$versionId'
       path: '/plano/$versionId'
@@ -363,10 +383,13 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface NutriPacientesIdRouteChildren {
   NutriPacientesIdPlanoVersionIdRoute: typeof NutriPacientesIdPlanoVersionIdRoute
+  NutriPacientesIdPlanoEditarChar123versionIdChar125Route: typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
 
 const NutriPacientesIdRouteChildren: NutriPacientesIdRouteChildren = {
   NutriPacientesIdPlanoVersionIdRoute: NutriPacientesIdPlanoVersionIdRoute,
+  NutriPacientesIdPlanoEditarChar123versionIdChar125Route:
+    NutriPacientesIdPlanoEditarChar123versionIdChar125Route,
 }
 
 const NutriPacientesIdRouteWithChildren =
@@ -408,13 +431,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
