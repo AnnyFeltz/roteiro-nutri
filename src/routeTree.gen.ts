@@ -18,10 +18,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as NutriIndexRouteImport } from './routes/nutri.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as PacienteLoginRouteImport } from './routes/paciente.login'
+import { Route as NutriPlanosRouteImport } from './routes/nutri.planos'
 import { Route as NutriPacientesRouteImport } from './routes/nutri.pacientes'
 import { Route as AppPlanoRouteImport } from './routes/app.plano'
 import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppEvolucaoRouteImport } from './routes/app.evolucao'
+import { Route as NutriPacientesIndexRouteImport } from './routes/nutri.pacientes.index'
 import { Route as NutriPacientesIdRouteImport } from './routes/nutri.pacientes.$id'
 import { Route as AppPlanoMealIdRouteImport } from './routes/app.plano_.$mealId'
 import { Route as NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport } from './routes/nutri.pacientes.$id.plano_.editar{$versionId}'
@@ -72,6 +74,11 @@ const PacienteLoginRoute = PacienteLoginRouteImport.update({
   path: '/paciente/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NutriPlanosRoute = NutriPlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => NutriRoute,
+} as any)
 const NutriPacientesRoute = NutriPacientesRouteImport.update({
   id: '/pacientes',
   path: '/pacientes',
@@ -91,6 +98,11 @@ const AppEvolucaoRoute = AppEvolucaoRouteImport.update({
   id: '/evolucao',
   path: '/evolucao',
   getParentRoute: () => AppRoute,
+} as any)
+const NutriPacientesIndexRoute = NutriPacientesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NutriPacientesRoute,
 } as any)
 const NutriPacientesIdRoute = NutriPacientesIdRouteImport.update({
   id: '/$id',
@@ -126,11 +138,13 @@ export interface FileRoutesByFullPath {
   '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
+  '/nutri/planos': typeof NutriPlanosRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
   '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/': typeof NutriPacientesIndexRoute
   '/nutri/pacientes/$id/plano/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
   '/nutri/pacientes/$id/plano/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
@@ -142,12 +156,13 @@ export interface FileRoutesByTo {
   '/app/evolucao': typeof AppEvolucaoRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
-  '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
+  '/nutri/planos': typeof NutriPlanosRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app': typeof AppIndexRoute
   '/nutri': typeof NutriIndexRoute
   '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes': typeof NutriPacientesIndexRoute
   '/nutri/pacientes/$id/plano/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
   '/nutri/pacientes/$id/plano/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
@@ -163,11 +178,13 @@ export interface FileRoutesById {
   '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
+  '/nutri/planos': typeof NutriPlanosRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
   '/app/plano_/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRouteWithChildren
+  '/nutri/pacientes/': typeof NutriPacientesIndexRoute
   '/nutri/pacientes/$id/plano_/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
   '/nutri/pacientes/$id/plano_/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
@@ -184,11 +201,13 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/pacientes'
+    | '/nutri/planos'
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
     | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/'
     | '/nutri/pacientes/$id/plano/$versionId'
     | '/nutri/pacientes/$id/plano/editar{$versionId}'
   fileRoutesByTo: FileRoutesByTo
@@ -200,12 +219,13 @@ export interface FileRouteTypes {
     | '/app/evolucao'
     | '/app/perfil'
     | '/app/plano'
-    | '/nutri/pacientes'
+    | '/nutri/planos'
     | '/paciente/login'
     | '/app'
     | '/nutri'
     | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
+    | '/nutri/pacientes'
     | '/nutri/pacientes/$id/plano/$versionId'
     | '/nutri/pacientes/$id/plano/editar{$versionId}'
   id:
@@ -220,11 +240,13 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/pacientes'
+    | '/nutri/planos'
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
     | '/app/plano_/$mealId'
     | '/nutri/pacientes/$id'
+    | '/nutri/pacientes/'
     | '/nutri/pacientes/$id/plano_/$versionId'
     | '/nutri/pacientes/$id/plano_/editar{$versionId}'
   fileRoutesById: FileRoutesById
@@ -304,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PacienteLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/nutri/planos': {
+      id: '/nutri/planos'
+      path: '/planos'
+      fullPath: '/nutri/planos'
+      preLoaderRoute: typeof NutriPlanosRouteImport
+      parentRoute: typeof NutriRoute
+    }
     '/nutri/pacientes': {
       id: '/nutri/pacientes'
       path: '/pacientes'
@@ -331,6 +360,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/evolucao'
       preLoaderRoute: typeof AppEvolucaoRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/nutri/pacientes/': {
+      id: '/nutri/pacientes/'
+      path: '/'
+      fullPath: '/nutri/pacientes/'
+      preLoaderRoute: typeof NutriPacientesIndexRouteImport
+      parentRoute: typeof NutriPacientesRoute
     }
     '/nutri/pacientes/$id': {
       id: '/nutri/pacientes/$id'
@@ -397,10 +433,12 @@ const NutriPacientesIdRouteWithChildren =
 
 interface NutriPacientesRouteChildren {
   NutriPacientesIdRoute: typeof NutriPacientesIdRouteWithChildren
+  NutriPacientesIndexRoute: typeof NutriPacientesIndexRoute
 }
 
 const NutriPacientesRouteChildren: NutriPacientesRouteChildren = {
   NutriPacientesIdRoute: NutriPacientesIdRouteWithChildren,
+  NutriPacientesIndexRoute: NutriPacientesIndexRoute,
 }
 
 const NutriPacientesRouteWithChildren = NutriPacientesRoute._addFileChildren(
@@ -409,11 +447,13 @@ const NutriPacientesRouteWithChildren = NutriPacientesRoute._addFileChildren(
 
 interface NutriRouteChildren {
   NutriPacientesRoute: typeof NutriPacientesRouteWithChildren
+  NutriPlanosRoute: typeof NutriPlanosRoute
   NutriIndexRoute: typeof NutriIndexRoute
 }
 
 const NutriRouteChildren: NutriRouteChildren = {
   NutriPacientesRoute: NutriPacientesRouteWithChildren,
+  NutriPlanosRoute: NutriPlanosRoute,
   NutriIndexRoute: NutriIndexRoute,
 }
 
