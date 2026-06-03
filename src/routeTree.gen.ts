@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as NutriIndexRouteImport } from './routes/nutri.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as PacienteLoginRouteImport } from './routes/paciente.login'
+import { Route as NutriTacoRouteImport } from './routes/nutri.taco'
 import { Route as NutriPlanosRouteImport } from './routes/nutri.planos'
 import { Route as NutriPacientesRouteImport } from './routes/nutri.pacientes'
 import { Route as AppPlanoRouteImport } from './routes/app.plano'
@@ -73,6 +74,11 @@ const PacienteLoginRoute = PacienteLoginRouteImport.update({
   id: '/paciente/login',
   path: '/paciente/login',
   getParentRoute: () => rootRouteImport,
+} as any)
+const NutriTacoRoute = NutriTacoRouteImport.update({
+  id: '/taco',
+  path: '/taco',
+  getParentRoute: () => NutriRoute,
 } as any)
 const NutriPlanosRoute = NutriPlanosRouteImport.update({
   id: '/planos',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/app/plano': typeof AppPlanoRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/nutri/planos': typeof NutriPlanosRoute
+  '/nutri/taco': typeof NutriTacoRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/planos': typeof NutriPlanosRoute
+  '/nutri/taco': typeof NutriTacoRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app': typeof AppIndexRoute
   '/nutri': typeof NutriIndexRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/app/plano': typeof AppPlanoRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/nutri/planos': typeof NutriPlanosRoute
+  '/nutri/taco': typeof NutriTacoRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/app/plano'
     | '/nutri/pacientes'
     | '/nutri/planos'
+    | '/nutri/taco'
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/planos'
+    | '/nutri/taco'
     | '/paciente/login'
     | '/app'
     | '/nutri'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/app/plano'
     | '/nutri/pacientes'
     | '/nutri/planos'
+    | '/nutri/taco'
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
@@ -325,6 +337,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/paciente/login'
       preLoaderRoute: typeof PacienteLoginRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/nutri/taco': {
+      id: '/nutri/taco'
+      path: '/taco'
+      fullPath: '/nutri/taco'
+      preLoaderRoute: typeof NutriTacoRouteImport
+      parentRoute: typeof NutriRoute
     }
     '/nutri/planos': {
       id: '/nutri/planos'
@@ -448,12 +467,14 @@ const NutriPacientesRouteWithChildren = NutriPacientesRoute._addFileChildren(
 interface NutriRouteChildren {
   NutriPacientesRoute: typeof NutriPacientesRouteWithChildren
   NutriPlanosRoute: typeof NutriPlanosRoute
+  NutriTacoRoute: typeof NutriTacoRoute
   NutriIndexRoute: typeof NutriIndexRoute
 }
 
 const NutriRouteChildren: NutriRouteChildren = {
   NutriPacientesRoute: NutriPacientesRouteWithChildren,
   NutriPlanosRoute: NutriPlanosRoute,
+  NutriTacoRoute: NutriTacoRoute,
   NutriIndexRoute: NutriIndexRoute,
 }
 
