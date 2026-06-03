@@ -8,7 +8,7 @@ import { calcFood, calcMealKcal, foodIcon } from "@/lib/food-utils";
 import { getFood } from "@/lib/taco-foods";
 import { macroGrams } from "@/lib/nutrition";
 
-export const Route = createFileRoute("/nutri/pacientes/$id/plano_/$versionId")({
+export const Route = createFileRoute("/nutri/pacientes/$id_/plano/$versionId")({
   head: () => ({ meta: [{ title: "Plano alimentar — Roteiro Nutri" }] }),
   component: PlanView,
 });
