@@ -29,7 +29,7 @@ function PlanEditor() {
   const p = getPatient(id);
   const isNew = versionId === "new";
   const existing = !isNew ? getPlanById(versionId) : undefined;
-  const template = existing ?? (p ? getActivePlan(p.id) : undefined);
+  const template = existing ?? (!isNew && p ? getActivePlan(p.id) : undefined);
 
   const [formula, setFormula] = useState<"mifflin" | "harris">("mifflin");
   const [activity, setActivity] = useState<ActivityLevel>("moderate");
