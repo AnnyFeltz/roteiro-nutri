@@ -20,9 +20,12 @@ export const Route = createFileRoute("/nutri/pacientes/$id_/plano/editar{$versio
 });
 
 function PlanEditor() {
-  const { id, versionId } = Route.useParams();
+  const params = Route.useParams() as { id?: string; id_?: string; versionId: string };
+  const id = params.id ?? params.id_;
+  const { versionId } = params;
   const { getPatient, getPlanById, getActivePlan, upsertPlan } = useStore();
   const nav = useNavigate();
+  if (!id) return <div>Paciente não encontrado.</div>;
   const p = getPatient(id);
   const isNew = versionId === "new";
   const existing = !isNew ? getPlanById(versionId) : undefined;

@@ -14,9 +14,12 @@ export const Route = createFileRoute("/nutri/pacientes/$id_/plano/$versionId")({
 });
 
 function PlanView() {
-  const { id, versionId } = Route.useParams();
+  const params = Route.useParams() as { id?: string; id_?: string; versionId: string };
+  const id = params.id ?? params.id_;
+  const { versionId } = params;
   const { getPatient, getPlanById, getActivePlan } = useStore();
   const nav = useNavigate();
+  if (!id) return <div className="p-6">Paciente não encontrado.</div>;
   const p = getPatient(id);
 
   if (!p) return <div className="p-6">Paciente não encontrado.</div>;
