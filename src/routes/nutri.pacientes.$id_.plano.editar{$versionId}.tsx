@@ -14,19 +14,22 @@ import { calcFood, calcMealKcal, foodIcon } from "@/lib/food-utils";
 import { getFood } from "@/lib/taco-foods";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/nutri/pacientes/$id/plano_/editar{$versionId}")({
+export const Route = createFileRoute("/nutri/pacientes/$id_/plano/editar{$versionId}")({
   head: () => ({ meta: [{ title: "Editor de Plano — Roteiro Nutri" }] }),
   component: PlanEditor,
 });
 
 function PlanEditor() {
-  const { id, versionId } = Route.useParams();
+  const params = Route.useParams() as { id?: string; id_?: string; versionId: string };
+  const id = params.id ?? params.id_;
+  const { versionId } = params;
   const { getPatient, getPlanById, getActivePlan, upsertPlan } = useStore();
   const nav = useNavigate();
+  if (!id) return <div>Paciente não encontrado.</div>;
   const p = getPatient(id);
   const isNew = versionId === "new";
   const existing = !isNew ? getPlanById(versionId) : undefined;
-  const template = existing ?? (p ? getActivePlan(p.id) : undefined);
+  const template = existing ?? (!isNew && p ? getActivePlan(p.id) : undefined);
 
   const [formula, setFormula] = useState<"mifflin" | "harris">("mifflin");
   const [activity, setActivity] = useState<ActivityLevel>("moderate");

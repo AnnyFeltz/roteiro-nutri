@@ -249,16 +249,16 @@ const StoreCtx = createContext<Store | null>(null);
 const SESSION_KEY = "roteiro-nutri-session";
 
 export function MockStoreProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session>({ role: null });
-  const [patients, setPatients] = useState<Patient[]>(PATIENTS);
-  const [plans, setPlans] = useState<MealPlan[]>([seedPlan]);
-
-  useEffect(() => {
+  const [session, setSession] = useState<Session>(() => {
     try {
       const raw = localStorage.getItem(SESSION_KEY);
-      if (raw) setSession(JSON.parse(raw));
-    } catch {}
-  }, []);
+      return raw ? JSON.parse(raw) : { role: null };
+    } catch {
+      return { role: null };
+    }
+  });
+  const [patients, setPatients] = useState<Patient[]>(PATIENTS);
+  const [plans, setPlans] = useState<MealPlan[]>([seedPlan]);
 
   useEffect(() => {
     try { localStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch {}
