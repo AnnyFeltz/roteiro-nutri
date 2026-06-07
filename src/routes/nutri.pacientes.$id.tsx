@@ -89,23 +89,11 @@ function PatientDetail() {
         </TabsContent>
 
         <TabsContent value="consultas" className="mt-5">
-          <Card className="p-6 bg-card border-border">
-            <h3 className="font-display font-semibold mb-4">Histórico de atendimentos</h3>
-            <ul className="space-y-3">
-              {[
-                { d: "28/05/2024", t: "Retorno", n: "Ajuste no plano alimentar. Adesão de 92%." },
-                { d: "12/03/2024", t: "Avaliação inicial", n: "Início do acompanhamento. Plano de emagrecimento criado." },
-              ].map((c, i) => (
-                <li key={i} className="flex gap-4 p-4 rounded-xl border border-border">
-                  <div className="text-sm font-mono text-muted-foreground w-24">{c.d}</div>
-                  <div className="flex-1">
-                    <Badge variant="outline" className="mb-1">{c.t}</Badge>
-                    <p className="text-sm">{c.n}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <ConsultasTab
+            p={p}
+            onAdd={(c: any) => { addConsultation(p.id, c); toast.success("Atendimento registrado"); }}
+            onDelete={(cid: string) => { deleteConsultation(p.id, cid); toast.success("Atendimento removido"); }}
+          />
         </TabsContent>
       </Tabs>
     </div>
