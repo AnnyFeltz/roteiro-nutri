@@ -220,7 +220,7 @@ function PlanoTab({ p, plan, onEdit }: any) {
             <p className="text-sm text-muted-foreground">Plano ativo · iniciado em {plan.createdAt}</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => toast.success("PDF gerado (simulação)")} className="gap-2"><FileText className="h-4 w-4" /> Exportar PDF</Button>
+            <Button variant="outline" onClick={() => window.print()} className="gap-2 no-print"><FileText className="h-4 w-4" /> Exportar PDF</Button>
             <Button onClick={onEdit} className="bg-primary hover:bg-leaf-deep">Editar plano</Button>
           </div>
         </div>
