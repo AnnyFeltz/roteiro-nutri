@@ -180,3 +180,10 @@
                 0 8px 24px -12px oklch(0.34 0.08 142 / 0.12);
   }
 }
+
+@media print {
+  body { background: white !important; }
+  .no-print { display: none !important; }
+  aside, header > nav, nav.fixed { display: none !important; }
+}
+
