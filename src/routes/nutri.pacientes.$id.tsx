@@ -23,7 +23,7 @@ export const Route = createFileRoute("/nutri/pacientes/$id")({
 
 function PatientDetail() {
   const { id } = Route.useParams();
-  const { getPatient, getActivePlan, updatePatient } = useStore();
+  const { getPatient, getActivePlan, updatePatient, addConsultation, deleteConsultation } = useStore();
   const nav = useNavigate();
   const p = getPatient(id);
 
