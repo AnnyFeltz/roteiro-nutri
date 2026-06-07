@@ -344,6 +344,25 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
         })
       );
     },
+    addConsultation: (patientId, c) => {
+      const newC = { id: `c${Date.now()}`, ...c };
+      setPatients((prev) =>
+        prev.map((p) =>
+          p.id === patientId
+            ? { ...p, consultations: [newC, ...(p.consultations ?? [])] }
+            : p
+        )
+      );
+    },
+    deleteConsultation: (patientId, consultationId) => {
+      setPatients((prev) =>
+        prev.map((p) =>
+          p.id === patientId
+            ? { ...p, consultations: (p.consultations ?? []).filter((c) => c.id !== consultationId) }
+            : p
+        )
+      );
+    },
   };
 
   return <StoreCtx.Provider value={store}>{children}</StoreCtx.Provider>;
