@@ -243,6 +243,8 @@ interface Store {
   upsertPlan: (plan: MealPlan) => void;
   toggleMealConsumed: (planId: string, mealId: string) => void;
   substituteFood: (planId: string, mealId: string, foodIndex: number, newFoodId: string, grams: number) => void;
+  addConsultation: (patientId: string, c: { date: string; type: string; notes: string }) => void;
+  deleteConsultation: (patientId: string, consultationId: string) => void;
 }
 
 const StoreCtx = createContext<Store | null>(null);
