@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Plus, FileText, ChevronRight } from "lucide-react";
+import { ArrowLeft, Plus, FileText, ChevronRight, Trash2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { bmi, bmiLabel } from "@/lib/nutrition";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/nutri/pacientes/$id")({
 
 function PatientDetail() {
   const { id } = Route.useParams();
-  const { getPatient, getActivePlan, updatePatient } = useStore();
+  const { getPatient, getActivePlan, updatePatient, addConsultation, deleteConsultation } = useStore();
   const nav = useNavigate();
   const p = getPatient(id);
 
@@ -89,23 +89,11 @@ function PatientDetail() {
         </TabsContent>
 
         <TabsContent value="consultas" className="mt-5">
-          <Card className="p-6 bg-card border-border">
-            <h3 className="font-display font-semibold mb-4">Histórico de atendimentos</h3>
-            <ul className="space-y-3">
-              {[
-                { d: "28/05/2024", t: "Retorno", n: "Ajuste no plano alimentar. Adesão de 92%." },
-                { d: "12/03/2024", t: "Avaliação inicial", n: "Início do acompanhamento. Plano de emagrecimento criado." },
-              ].map((c, i) => (
-                <li key={i} className="flex gap-4 p-4 rounded-xl border border-border">
-                  <div className="text-sm font-mono text-muted-foreground w-24">{c.d}</div>
-                  <div className="flex-1">
-                    <Badge variant="outline" className="mb-1">{c.t}</Badge>
-                    <p className="text-sm">{c.n}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <ConsultasTab
+            p={p}
+            onAdd={(c: any) => { addConsultation(p.id, c); toast.success("Atendimento registrado"); }}
+            onDelete={(cid: string) => { deleteConsultation(p.id, cid); toast.success("Atendimento removido"); }}
+          />
         </TabsContent>
       </Tabs>
     </div>
@@ -232,7 +220,7 @@ function PlanoTab({ p, plan, onEdit }: any) {
             <p className="text-sm text-muted-foreground">Plano ativo · iniciado em {plan.createdAt}</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => toast.success("PDF gerado (simulação)")} className="gap-2"><FileText className="h-4 w-4" /> Exportar PDF</Button>
+            <Button variant="outline" onClick={() => window.print()} className="gap-2 no-print"><FileText className="h-4 w-4" /> Exportar PDF</Button>
             <Button onClick={onEdit} className="bg-primary hover:bg-leaf-deep">Editar plano</Button>
           </div>
         </div>
@@ -306,6 +294,63 @@ function EvolucaoTab({ p }: any) {
         </ResponsiveContainer>
       </div>
     </Card>
+  );
+}
+
+function ConsultasTab({ p, onAdd, onDelete }: any) {
+  const today = new Date().toLocaleDateString("pt-BR");
+  const [form, setForm] = useState({ date: today, type: "Retorno", notes: "" });
+  const list = p.consultations ?? [];
+  const submit = () => {
+    if (!form.notes.trim()) { toast.error("Adicione uma nota do atendimento"); return; }
+    onAdd(form);
+    setForm({ date: today, type: "Retorno", notes: "" });
+  };
+  return (
+    <div className="space-y-5">
+      <Card className="p-6 bg-card border-border">
+        <h3 className="font-display font-semibold mb-4">Registrar novo atendimento</h3>
+        <div className="grid md:grid-cols-3 gap-3">
+          <div>
+            <Label>Data</Label>
+            <Input className="mt-1.5" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+          </div>
+          <div className="md:col-span-2">
+            <Label>Tipo</Label>
+            <Input className="mt-1.5" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Retorno, Avaliação, Reavaliação..." />
+          </div>
+        </div>
+        <div className="mt-3">
+          <Label>Notas do atendimento</Label>
+          <Textarea className="mt-1.5 min-h-[100px]" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Conduta, observações clínicas, ajustes..." />
+        </div>
+        <div className="flex justify-end mt-3">
+          <Button onClick={submit} className="bg-primary hover:bg-leaf-deep gap-2"><Plus className="h-4 w-4" /> Registrar</Button>
+        </div>
+      </Card>
+
+      <Card className="p-6 bg-card border-border">
+        <h3 className="font-display font-semibold mb-4">Histórico de atendimentos ({list.length})</h3>
+        {list.length === 0 ? (
+          <p className="text-sm text-muted-foreground italic">Nenhum atendimento registrado.</p>
+        ) : (
+          <ul className="space-y-3">
+            {list.map((c: any) => (
+              <li key={c.id} className="flex gap-4 p-4 rounded-xl border border-border group">
+                <div className="text-sm font-mono text-muted-foreground w-24 shrink-0">{c.date}</div>
+                <div className="flex-1 min-w-0">
+                  <Badge variant="outline" className="mb-1">{c.type}</Badge>
+                  <p className="text-sm whitespace-pre-wrap">{c.notes}</p>
+                </div>
+                <button onClick={() => onDelete(c.id)} className="opacity-0 group-hover:opacity-100 transition text-muted-foreground hover:text-destructive">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+    </div>
   );
 }
 

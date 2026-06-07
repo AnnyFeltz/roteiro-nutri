@@ -60,8 +60,8 @@ function PlanView() {
         <Link to="/nutri/pacientes/$id" params={{ id: p.id }} className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Voltar para {p.name}
         </Link>
-        <div className="flex gap-2">
-          <Button variant="outline" className="gap-2"><FileDown className="h-4 w-4" /> Exportar PDF</Button>
+        <div className="flex gap-2 no-print">
+          <Button variant="outline" onClick={() => window.print()} className="gap-2"><FileDown className="h-4 w-4" /> Exportar PDF</Button>
           <Button
             onClick={() => nav({ to: "/nutri/pacientes/$id/plano/editar{$versionId}", params: { id: p.id, versionId: plan.id } })}
             className="bg-primary hover:bg-leaf-deep gap-2"
