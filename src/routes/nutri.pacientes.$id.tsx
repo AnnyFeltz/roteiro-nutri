@@ -297,6 +297,63 @@ function EvolucaoTab({ p }: any) {
   );
 }
 
+function ConsultasTab({ p, onAdd, onDelete }: any) {
+  const today = new Date().toLocaleDateString("pt-BR");
+  const [form, setForm] = useState({ date: today, type: "Retorno", notes: "" });
+  const list = p.consultations ?? [];
+  const submit = () => {
+    if (!form.notes.trim()) { toast.error("Adicione uma nota do atendimento"); return; }
+    onAdd(form);
+    setForm({ date: today, type: "Retorno", notes: "" });
+  };
+  return (
+    <div className="space-y-5">
+      <Card className="p-6 bg-card border-border">
+        <h3 className="font-display font-semibold mb-4">Registrar novo atendimento</h3>
+        <div className="grid md:grid-cols-3 gap-3">
+          <div>
+            <Label>Data</Label>
+            <Input className="mt-1.5" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+          </div>
+          <div className="md:col-span-2">
+            <Label>Tipo</Label>
+            <Input className="mt-1.5" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Retorno, Avaliação, Reavaliação..." />
+          </div>
+        </div>
+        <div className="mt-3">
+          <Label>Notas do atendimento</Label>
+          <Textarea className="mt-1.5 min-h-[100px]" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Conduta, observações clínicas, ajustes..." />
+        </div>
+        <div className="flex justify-end mt-3">
+          <Button onClick={submit} className="bg-primary hover:bg-leaf-deep gap-2"><Plus className="h-4 w-4" /> Registrar</Button>
+        </div>
+      </Card>
+
+      <Card className="p-6 bg-card border-border">
+        <h3 className="font-display font-semibold mb-4">Histórico de atendimentos ({list.length})</h3>
+        {list.length === 0 ? (
+          <p className="text-sm text-muted-foreground italic">Nenhum atendimento registrado.</p>
+        ) : (
+          <ul className="space-y-3">
+            {list.map((c: any) => (
+              <li key={c.id} className="flex gap-4 p-4 rounded-xl border border-border group">
+                <div className="text-sm font-mono text-muted-foreground w-24 shrink-0">{c.date}</div>
+                <div className="flex-1 min-w-0">
+                  <Badge variant="outline" className="mb-1">{c.type}</Badge>
+                  <p className="text-sm whitespace-pre-wrap">{c.notes}</p>
+                </div>
+                <button onClick={() => onDelete(c.id)} className="opacity-0 group-hover:opacity-100 transition text-muted-foreground hover:text-destructive">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+    </div>
+  );
+}
+
 function Stat({ label, value, sub, large }: { label: string; value: string; sub?: string; large?: boolean }) {
   return (
     <div className="rounded-xl border border-border bg-background/50 p-4">
