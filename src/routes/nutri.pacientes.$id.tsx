@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Plus, FileText, ChevronRight } from "lucide-react";
+import { ArrowLeft, Plus, FileText, ChevronRight, Trash2 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { bmi, bmiLabel } from "@/lib/nutrition";
 import { useState } from "react";
