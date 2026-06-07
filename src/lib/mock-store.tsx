@@ -96,6 +96,11 @@ const PATIENTS: Patient[] = [
       { month: "Mai", weight: 62.5 }, { month: "Jun", weight: 62 },
     ],
     avatarColor: "oklch(0.55 0.13 45)",
+    consultations: [
+      { id: "c1", date: "28/05/2024", type: "Retorno", notes: "Ajuste no plano alimentar. Adesão de 92%. Paciente relata mais energia." },
+      { id: "c2", date: "20/04/2024", type: "Retorno", notes: "Redução de 1,2kg desde a última consulta. Mantida a estratégia." },
+      { id: "c3", date: "12/03/2024", type: "Avaliação inicial", notes: "Início do acompanhamento. Plano de emagrecimento criado. Meta: -5kg em 6 meses." },
+    ],
   },
   {
     id: "p2", name: "João Pedro Souza", email: "joao@email.com", age: 32, sex: "M",
