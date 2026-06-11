@@ -304,6 +304,10 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
     },
     updatePatient: (id, patch) => {
       setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+      // RN04: paciente inativo não pode ter plano ativo
+      if (patch.active === false) {
+        setPlans((prev) => prev.map((pl) => (pl.patientId === id ? { ...pl, active: false } : pl)));
+      }
     },
     deactivatePatient: (id) => {
       setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, active: false } : x)));
