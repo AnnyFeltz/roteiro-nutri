@@ -60,7 +60,7 @@ function Dashboard() {
               </li>
             ))}
           </ul>
-          <Link to="/nutri/pacientes" className="block text-center text-sm text-primary hover:underline mt-5 pt-4 border-t border-border">
+          <Link to="/nutri/agenda" className="block text-center text-sm text-primary hover:underline mt-5 pt-4 border-t border-border">
             Ver agenda completa
           </Link>
         </Card>

@@ -52,15 +52,16 @@ function PlanEditor() {
 
   const save = () => {
     if (sumMacros !== 100) { toast.error("Macros devem somar 100%"); return; }
-    const newId = existing?.id ?? `v${Date.now()}`;
+    // RN07: toda alteração gera uma nova versão do plano (histórico preservado)
+    const newId = `v${Date.now()}`;
     const plan: MealPlan = {
       id: newId,
       patientId: p.id, name: planName, active: true,
-      createdAt: existing?.createdAt ?? new Date().toLocaleDateString("pt-BR"),
-      targetKcal, macros, meals, adherenceLog: existing?.adherenceLog ?? {},
+      createdAt: new Date().toLocaleDateString("pt-BR"),
+      targetKcal, macros, meals, adherenceLog: {},
     };
     upsertPlan(plan);
-    toast.success(existing ? "Versão do plano atualizada" : "Nova versão do plano criada (RN07)");
+    toast.success(existing ? `Nova versão criada a partir de ${existing.id}` : "Plano alimentar criado");
     nav({ to: "/nutri/pacientes/$id/plano/$versionId", params: { id: p.id, versionId: newId } });
   };
 
