@@ -20,9 +20,11 @@ import { Route as NutriIndexRouteImport } from './routes/nutri.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as PacienteLoginRouteImport } from './routes/paciente.login'
 import { Route as NutriTacoRouteImport } from './routes/nutri.taco'
+import { Route as NutriRelatoriosRouteImport } from './routes/nutri.relatorios'
 import { Route as NutriPlanosRouteImport } from './routes/nutri.planos'
 import { Route as NutriPacientesRouteImport } from './routes/nutri.pacientes'
 import { Route as NutriEvolucaoRouteImport } from './routes/nutri.evolucao'
+import { Route as NutriConfiguracoesRouteImport } from './routes/nutri.configuracoes'
 import { Route as NutriAgendaRouteImport } from './routes/nutri.agenda'
 import { Route as AppPlanoRouteImport } from './routes/app.plano'
 import { Route as AppPerfilRouteImport } from './routes/app.perfil'
@@ -90,6 +92,11 @@ const NutriTacoRoute = NutriTacoRouteImport.update({
   path: '/taco',
   getParentRoute: () => NutriRoute,
 } as any)
+const NutriRelatoriosRoute = NutriRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => NutriRoute,
+} as any)
 const NutriPlanosRoute = NutriPlanosRouteImport.update({
   id: '/planos',
   path: '/planos',
@@ -103,6 +110,11 @@ const NutriPacientesRoute = NutriPacientesRouteImport.update({
 const NutriEvolucaoRoute = NutriEvolucaoRouteImport.update({
   id: '/evolucao',
   path: '/evolucao',
+  getParentRoute: () => NutriRoute,
+} as any)
+const NutriConfiguracoesRoute = NutriConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
   getParentRoute: () => NutriRoute,
 } as any)
 const NutriAgendaRoute = NutriAgendaRouteImport.update({
@@ -175,9 +187,11 @@ export interface FileRoutesByFullPath {
   '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/agenda': typeof NutriAgendaRouteWithChildren
+  '/nutri/configuracoes': typeof NutriConfiguracoesRoute
   '/nutri/evolucao': typeof NutriEvolucaoRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/nutri/planos': typeof NutriPlanosRoute
+  '/nutri/relatorios': typeof NutriRelatoriosRoute
   '/nutri/taco': typeof NutriTacoRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
@@ -199,8 +213,10 @@ export interface FileRoutesByTo {
   '/app/evolucao': typeof AppEvolucaoRoute
   '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
+  '/nutri/configuracoes': typeof NutriConfiguracoesRoute
   '/nutri/evolucao': typeof NutriEvolucaoRoute
   '/nutri/planos': typeof NutriPlanosRoute
+  '/nutri/relatorios': typeof NutriRelatoriosRoute
   '/nutri/taco': typeof NutriTacoRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app': typeof AppIndexRoute
@@ -226,9 +242,11 @@ export interface FileRoutesById {
   '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/agenda': typeof NutriAgendaRouteWithChildren
+  '/nutri/configuracoes': typeof NutriConfiguracoesRoute
   '/nutri/evolucao': typeof NutriEvolucaoRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/nutri/planos': typeof NutriPlanosRoute
+  '/nutri/relatorios': typeof NutriRelatoriosRoute
   '/nutri/taco': typeof NutriTacoRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
@@ -255,9 +273,11 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/agenda'
+    | '/nutri/configuracoes'
     | '/nutri/evolucao'
     | '/nutri/pacientes'
     | '/nutri/planos'
+    | '/nutri/relatorios'
     | '/nutri/taco'
     | '/paciente/login'
     | '/app/'
@@ -279,8 +299,10 @@ export interface FileRouteTypes {
     | '/app/evolucao'
     | '/app/perfil'
     | '/app/plano'
+    | '/nutri/configuracoes'
     | '/nutri/evolucao'
     | '/nutri/planos'
+    | '/nutri/relatorios'
     | '/nutri/taco'
     | '/paciente/login'
     | '/app'
@@ -305,9 +327,11 @@ export interface FileRouteTypes {
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/agenda'
+    | '/nutri/configuracoes'
     | '/nutri/evolucao'
     | '/nutri/pacientes'
     | '/nutri/planos'
+    | '/nutri/relatorios'
     | '/nutri/taco'
     | '/paciente/login'
     | '/app/'
@@ -411,6 +435,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NutriTacoRouteImport
       parentRoute: typeof NutriRoute
     }
+    '/nutri/relatorios': {
+      id: '/nutri/relatorios'
+      path: '/relatorios'
+      fullPath: '/nutri/relatorios'
+      preLoaderRoute: typeof NutriRelatoriosRouteImport
+      parentRoute: typeof NutriRoute
+    }
     '/nutri/planos': {
       id: '/nutri/planos'
       path: '/planos'
@@ -430,6 +461,13 @@ declare module '@tanstack/react-router' {
       path: '/evolucao'
       fullPath: '/nutri/evolucao'
       preLoaderRoute: typeof NutriEvolucaoRouteImport
+      parentRoute: typeof NutriRoute
+    }
+    '/nutri/configuracoes': {
+      id: '/nutri/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/nutri/configuracoes'
+      preLoaderRoute: typeof NutriConfiguracoesRouteImport
       parentRoute: typeof NutriRoute
     }
     '/nutri/agenda': {
@@ -565,18 +603,22 @@ const NutriPacientesRouteWithChildren = NutriPacientesRoute._addFileChildren(
 
 interface NutriRouteChildren {
   NutriAgendaRoute: typeof NutriAgendaRouteWithChildren
+  NutriConfiguracoesRoute: typeof NutriConfiguracoesRoute
   NutriEvolucaoRoute: typeof NutriEvolucaoRoute
   NutriPacientesRoute: typeof NutriPacientesRouteWithChildren
   NutriPlanosRoute: typeof NutriPlanosRoute
+  NutriRelatoriosRoute: typeof NutriRelatoriosRoute
   NutriTacoRoute: typeof NutriTacoRoute
   NutriIndexRoute: typeof NutriIndexRoute
 }
 
 const NutriRouteChildren: NutriRouteChildren = {
   NutriAgendaRoute: NutriAgendaRouteWithChildren,
+  NutriConfiguracoesRoute: NutriConfiguracoesRoute,
   NutriEvolucaoRoute: NutriEvolucaoRoute,
   NutriPacientesRoute: NutriPacientesRouteWithChildren,
   NutriPlanosRoute: NutriPlanosRoute,
+  NutriRelatoriosRoute: NutriRelatoriosRoute,
   NutriTacoRoute: NutriTacoRoute,
   NutriIndexRoute: NutriIndexRoute,
 }
