@@ -41,6 +41,9 @@ function Perfil() {
             <Badge className="bg-white/20 text-primary-foreground border-0 hover:bg-white/30 capitalize">{p.goal}</Badge>
             <Badge className="bg-white/20 text-primary-foreground border-0 hover:bg-white/30">Desde {p.startDate.slice(3)}</Badge>
           </div>
+          <Link to="/app/perfil/editar" className="mt-4 inline-flex items-center gap-1.5 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">
+            <Pencil className="h-3 w-3" /> Editar perfil
+          </Link>
         </div>
       </Card>
 
