@@ -493,6 +493,38 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
         )
       );
     },
+    changeNutriPassword: (current, next) => {
+      if (current !== nutriPassword) return false;
+      if (!next || next.length < 6) return false;
+      setNutriPassword(next);
+      return true;
+    },
+    requestPatientPasswordReset: (email) => {
+      const p = patients.find((x) => x.email.toLowerCase() === email.toLowerCase());
+      if (!p) return { ok: false, error: "E-mail não cadastrado." };
+      // avoid duplicate pending requests
+      if (passwordResets.some((r) => r.patientId === p.id && r.status === "pendente")) {
+        return { ok: true, patientName: p.name };
+      }
+      setPasswordResets((prev) => [
+        { id: `pr${Date.now()}`, patientId: p.id, at: new Date().toISOString(), status: "pendente" },
+        ...prev,
+      ]);
+      return { ok: true, patientName: p.name };
+    },
+    approvePasswordReset: (id) => {
+      const req = passwordResets.find((r) => r.id === id);
+      if (!req) return { ok: false };
+      const pat = patients.find((p) => p.id === req.patientId);
+      if (!pat) return { ok: false };
+      const newPwd = genPwd();
+      setPatientPasswords((prev) => ({ ...prev, [req.patientId]: newPwd }));
+      setPasswordResets((prev) => prev.map((r) => (r.id === id ? { ...r, status: "aprovada", newPassword: newPwd } : r)));
+      return { ok: true, email: pat.email, newPassword: newPwd };
+    },
+    denyPasswordReset: (id) => {
+      setPasswordResets((prev) => prev.map((r) => (r.id === id ? { ...r, status: "negada" } : r)));
+    },
   };
 
   return <StoreCtx.Provider value={store}>{children}</StoreCtx.Provider>;
