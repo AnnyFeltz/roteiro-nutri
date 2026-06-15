@@ -35,7 +35,7 @@ export interface Patient {
   foodRecall: string;
   // Evolution series (weight by month label)
   evolution: { month: string; weight: number }[];
-  consultations?: { id: string; date: string; type: string; notes: string }[];
+  consultations?: { id: string; date: string; time?: string; type: string; notes: string }[];
   avatarColor: string;
 }
 
