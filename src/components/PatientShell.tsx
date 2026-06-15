@@ -23,11 +23,11 @@ export function PatientShell() {
 
   return (
     <div className="min-h-screen bg-gradient-sand flex justify-center">
-      <div className="w-full max-w-md min-h-screen bg-cream shadow-soft relative flex flex-col">
+      <div className="w-full max-w-md md:max-w-2xl lg:max-w-3xl min-h-screen bg-cream shadow-soft relative flex flex-col">
         <div className="flex-1 pb-24">
           <Outlet />
         </div>
-        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-card border-t border-border z-20">
+        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md md:max-w-2xl lg:max-w-3xl bg-card border-t border-border z-20">
           <div className="grid grid-cols-4 px-2 py-2 pb-[env(safe-area-inset-bottom)]">
             {TABS.map((t) => {
               const active = t.exact ? path === t.to : path.startsWith(t.to);
