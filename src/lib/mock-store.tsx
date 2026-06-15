@@ -282,6 +282,7 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
   });
   const [patients, setPatients] = useState<Patient[]>(PATIENTS);
   const [plans, setPlans] = useState<MealPlan[]>([seedPlan]);
+  const [patientUpdates, setPatientUpdates] = useState<PatientUpdate[]>([]);
 
   useEffect(() => {
     try { localStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch {}
@@ -292,6 +293,7 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
     nutritionist: NUTRI,
     patients,
     plans,
+    patientUpdates,
     loginNutri: (email) => {
       if (!email) return false;
       setSession({ role: "nutricionista", nutritionistId: NUTRI.id });
@@ -324,9 +326,31 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
         setPlans((prev) => prev.map((pl) => (pl.patientId === id ? { ...pl, active: false } : pl)));
       }
     },
+    updatePatientByPatient: (id, patch) => {
+      setPatients((prev) => prev.map((x) => {
+        if (x.id !== id) return x;
+        const updates: PatientUpdate[] = [];
+        (Object.keys(patch) as (keyof Patient)[]).forEach((k) => {
+          const oldV = (x as any)[k];
+          const newV = (patch as any)[k];
+          if (oldV !== newV) {
+            updates.push({
+              id: `u${Date.now()}-${k}`,
+              patientId: id,
+              field: String(k),
+              oldValue: String(oldV ?? ""),
+              newValue: String(newV ?? ""),
+              at: new Date().toISOString(),
+              read: false,
+            });
+          }
+        });
+        if (updates.length) setPatientUpdates((prev) => [...updates, ...prev]);
+        return { ...x, ...patch };
+      }));
+    },
     deactivatePatient: (id) => {
       setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, active: false } : x)));
-      // RN04: suspend active plan
       setPlans((prev) => prev.map((pl) => (pl.patientId === id ? { ...pl, active: false } : pl)));
     },
     getPatient: (id) => patients.find((p) => p.id === id),
@@ -335,10 +359,10 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
       if (!pat?.active) return undefined;
       return plans.find((p) => p.patientId === patientId && p.active);
     },
+    getPlansForPatient: (patientId) => plans.filter((p) => p.patientId === patientId),
     getPlanById: (planId) => plans.find((p) => p.id === planId),
     upsertPlan: (plan) => {
       setPlans((prev) => {
-        // RN07: ensure only one active plan per patient
         const filtered = prev.map((p) =>
           p.patientId === plan.patientId && p.id !== plan.id ? { ...p, active: false } : p
         );
@@ -346,6 +370,8 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
         return exists ? filtered.map((p) => (p.id === plan.id ? plan : p)) : [...filtered, plan];
       });
     },
+    markUpdatesRead: () => setPatientUpdates((prev) => prev.map((u) => ({ ...u, read: true }))),
+    clearUpdates: () => setPatientUpdates([]),
     toggleMealConsumed: (planId, mealId) => {
       setPlans((prev) =>
         prev.map((p) => {
