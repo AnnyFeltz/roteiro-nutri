@@ -329,20 +329,33 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
     try { document.cookie = `roteiro-nutri-visited=1; max-age=${60*60*24*365}; path=/; SameSite=Lax`; } catch {}
   }, [patients, plans, patientUpdates, passwordResets, nutriPassword, patientPasswords]);
 
+  const genPwd = () => {
+    const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+    let s = "";
+    for (let i = 0; i < 10; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
+  };
+
   const store: Store = {
     session,
     nutritionist: NUTRI,
     patients,
     plans,
     patientUpdates,
-    loginNutri: (email) => {
+    passwordResets,
+    nutriPassword,
+    patientPasswords,
+    loginNutri: (email, password) => {
       if (!email) return false;
+      if (password !== nutriPassword) return false;
       setSession({ role: "nutricionista", nutritionistId: NUTRI.id });
       return true;
     },
-    loginPatient: (email) => {
+    loginPatient: (email, password) => {
       const p = patients.find((x) => x.email.toLowerCase() === email.toLowerCase() && x.active);
       if (!p) return null;
+      const expected = patientPasswords[p.id] ?? "demo1234";
+      if (password !== expected) return null;
       setSession({ role: "paciente", patientId: p.id });
       return p.id;
     },
@@ -358,11 +371,11 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
         avatarColor: "oklch(0.52 0.13 142)",
       };
       setPatients((prev) => [newP, ...prev]);
+      setPatientPasswords((prev) => ({ ...prev, [id]: "demo1234" }));
       return id;
     },
     updatePatient: (id, patch) => {
       setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
-      // RN04: paciente inativo não pode ter plano ativo
       if (patch.active === false) {
         setPlans((prev) => prev.map((pl) => (pl.patientId === id ? { ...pl, active: false } : pl)));
       }
@@ -452,6 +465,15 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
       );
     },
     addConsultation: (patientId, c) => {
+      // Conflict check across all patients on same date+time
+      if (c.time) {
+        const conflict = patients.some((pp) =>
+          (pp.consultations ?? []).some((cc) => cc.date === c.date && cc.time === c.time)
+        );
+        if (conflict) {
+          return { ok: false, error: `Já existe uma consulta marcada em ${c.date} às ${c.time}.` };
+        }
+      }
       const newC = { id: `c${Date.now()}`, ...c };
       setPatients((prev) =>
         prev.map((p) =>
@@ -460,6 +482,7 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
             : p
         )
       );
+      return { ok: true };
     },
     deleteConsultation: (patientId, consultationId) => {
       setPatients((prev) =>
