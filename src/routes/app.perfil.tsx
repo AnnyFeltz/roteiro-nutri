@@ -122,9 +122,9 @@ function Perfil() {
 
       {/* Settings list */}
       <Card className="p-2 bg-card border-border">
-        <SettingsRow icon={<Bell className="h-4 w-4" />} label="Notificações" />
-        <SettingsRow icon={<FileText className="h-4 w-4" />} label="Histórico de planos" />
-        <SettingsRow icon={<Shield className="h-4 w-4" />} label="Privacidade" />
+        <SettingsRow to="/app/perfil/notificacoes" icon={<Bell className="h-4 w-4" />} label="Notificações" />
+        <SettingsRow to="/app/perfil/historico" icon={<FileText className="h-4 w-4" />} label="Histórico de planos" />
+        <SettingsRow to="/app/perfil/privacidade" icon={<Shield className="h-4 w-4" />} label="Privacidade" />
       </Card>
 
       <Button variant="outline" className="w-full gap-2" onClick={() => { logout(); nav({ to: "/" }); }}>
@@ -153,12 +153,12 @@ function Item({ icon, title, desc }: { icon: React.ReactNode; title: string; des
   );
 }
 
-function SettingsRow({ icon, label }: { icon: React.ReactNode; label: string }) {
+function SettingsRow({ icon, label, to }: { icon: React.ReactNode; label: string; to: string }) {
   return (
-    <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition text-left">
+    <Link to={to as any} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition text-left">
       <span className="text-muted-foreground">{icon}</span>
       <span className="flex-1 text-sm">{label}</span>
       <ChevronRight className="h-4 w-4 text-muted-foreground" />
-    </button>
+    </Link>
   );
 }
