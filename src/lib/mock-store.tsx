@@ -229,27 +229,42 @@ const seedPlan: MealPlan = {
   adherenceLog: { today: ["m1", "m2"] },
 };
 
+export interface PatientUpdate {
+  id: string;
+  patientId: string;
+  field: string;
+  oldValue: string;
+  newValue: string;
+  at: string; // ISO
+  read: boolean;
+}
+
 // ---------- Store ----------
 interface Store {
   session: Session;
   nutritionist: Nutritionist;
   patients: Patient[];
   plans: MealPlan[];
+  patientUpdates: PatientUpdate[];
   loginNutri: (email: string, password: string) => boolean;
   loginPatient: (email: string, password: string) => string | null;
   logout: () => void;
   signupNutri: (data: { name: string; email: string; password: string; crn: string }) => void;
   addPatient: (p: Omit<Patient, "id" | "active" | "evolution" | "avatarColor">) => string;
   updatePatient: (id: string, patch: Partial<Patient>) => void;
+  updatePatientByPatient: (id: string, patch: Partial<Patient>) => void;
   deactivatePatient: (id: string) => void;
   getPatient: (id: string) => Patient | undefined;
   getActivePlan: (patientId: string) => MealPlan | undefined;
+  getPlansForPatient: (patientId: string) => MealPlan[];
   getPlanById: (planId: string) => MealPlan | undefined;
   upsertPlan: (plan: MealPlan) => void;
   toggleMealConsumed: (planId: string, mealId: string) => void;
   substituteFood: (planId: string, mealId: string, foodIndex: number, newFoodId: string, grams: number) => void;
   addConsultation: (patientId: string, c: { date: string; type: string; notes: string }) => void;
   deleteConsultation: (patientId: string, consultationId: string) => void;
+  markUpdatesRead: () => void;
+  clearUpdates: () => void;
 }
 
 const StoreCtx = createContext<Store | null>(null);
