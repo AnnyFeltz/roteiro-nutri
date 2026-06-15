@@ -240,6 +240,14 @@ export interface PatientUpdate {
   read: boolean;
 }
 
+export interface PasswordResetRequest {
+  id: string;
+  patientId: string;
+  at: string;
+  status: "pendente" | "aprovada" | "negada";
+  newPassword?: string;
+}
+
 // ---------- Store ----------
 interface Store {
   session: Session;
@@ -247,6 +255,9 @@ interface Store {
   patients: Patient[];
   plans: MealPlan[];
   patientUpdates: PatientUpdate[];
+  passwordResets: PasswordResetRequest[];
+  nutriPassword: string;
+  patientPasswords: Record<string, string>;
   loginNutri: (email: string, password: string) => boolean;
   loginPatient: (email: string, password: string) => string | null;
   logout: () => void;
@@ -263,10 +274,14 @@ interface Store {
   upsertPlan: (plan: MealPlan) => void;
   toggleMealConsumed: (planId: string, mealId: string) => void;
   substituteFood: (planId: string, mealId: string, foodIndex: number, newFoodId: string, grams: number) => void;
-  addConsultation: (patientId: string, c: { date: string; type: string; notes: string }) => void;
+  addConsultation: (patientId: string, c: { date: string; time?: string; type: string; notes: string }) => { ok: boolean; error?: string };
   deleteConsultation: (patientId: string, consultationId: string) => void;
   markUpdatesRead: () => void;
   clearUpdates: () => void;
+  changeNutriPassword: (current: string, next: string) => boolean;
+  requestPatientPasswordReset: (email: string) => { ok: boolean; patientName?: string; error?: string };
+  approvePasswordReset: (id: string) => { ok: boolean; email?: string; newPassword?: string };
+  denyPasswordReset: (id: string) => void;
 }
 
 const StoreCtx = createContext<Store | null>(null);
