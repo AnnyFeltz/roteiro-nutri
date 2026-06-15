@@ -18,10 +18,11 @@ const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: bo
 ];
 
 export function NutriShell() {
-  const { session, nutritionist, logout } = useStore();
+  const { session, nutritionist, logout, patientUpdates } = useStore();
   const nav = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const unread = patientUpdates.filter((u) => !u.read).length;
 
   useEffect(() => {
     if (session.role !== "nutricionista") nav({ to: "/login" });
@@ -116,10 +117,14 @@ export function NutriShell() {
               <Input placeholder="Buscar paciente..." className="pl-9 bg-card border-border rounded-full" />
             </div>
             <div className="flex-1 sm:hidden" />
-            <button className="relative p-2 rounded-full hover:bg-muted shrink-0">
+            <Link to="/nutri/notificacoes" className="relative p-2 rounded-full hover:bg-muted shrink-0" aria-label="Notificações">
               <Bell className="h-5 w-5 text-foreground/70" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-terracotta" />
-            </button>
+              {unread > 0 && (
+                <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta text-terracotta-foreground text-[10px] font-semibold flex items-center justify-center">
+                  {unread}
+                </span>
+              )}
+            </Link>
           </div>
         </header>
         <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">

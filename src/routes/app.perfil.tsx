@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, LogOut, AlertTriangle, Target, Ruler, Mail, Phone, CalendarCheck, FileText, Bell, ChevronRight, Shield } from "lucide-react";
+import { ArrowLeft, LogOut, AlertTriangle, Target, Ruler, Mail, Phone, CalendarCheck, FileText, Bell, ChevronRight, Shield, Pencil } from "lucide-react";
 import { bmi, bmiLabel } from "@/lib/nutrition";
 
 export const Route = createFileRoute("/app/perfil")({
@@ -41,6 +41,9 @@ function Perfil() {
             <Badge className="bg-white/20 text-primary-foreground border-0 hover:bg-white/30 capitalize">{p.goal}</Badge>
             <Badge className="bg-white/20 text-primary-foreground border-0 hover:bg-white/30">Desde {p.startDate.slice(3)}</Badge>
           </div>
+          <Link to="/app/perfil/editar" className="mt-4 inline-flex items-center gap-1.5 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition">
+            <Pencil className="h-3 w-3" /> Editar perfil
+          </Link>
         </div>
       </Card>
 
@@ -119,9 +122,9 @@ function Perfil() {
 
       {/* Settings list */}
       <Card className="p-2 bg-card border-border">
-        <SettingsRow icon={<Bell className="h-4 w-4" />} label="Notificações" />
-        <SettingsRow icon={<FileText className="h-4 w-4" />} label="Histórico de planos" />
-        <SettingsRow icon={<Shield className="h-4 w-4" />} label="Privacidade" />
+        <SettingsRow to="/app/perfil/notificacoes" icon={<Bell className="h-4 w-4" />} label="Notificações" />
+        <SettingsRow to="/app/perfil/historico" icon={<FileText className="h-4 w-4" />} label="Histórico de planos" />
+        <SettingsRow to="/app/perfil/privacidade" icon={<Shield className="h-4 w-4" />} label="Privacidade" />
       </Card>
 
       <Button variant="outline" className="w-full gap-2" onClick={() => { logout(); nav({ to: "/" }); }}>
@@ -150,12 +153,12 @@ function Item({ icon, title, desc }: { icon: React.ReactNode; title: string; des
   );
 }
 
-function SettingsRow({ icon, label }: { icon: React.ReactNode; label: string }) {
+function SettingsRow({ icon, label, to }: { icon: React.ReactNode; label: string; to: string }) {
   return (
-    <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition text-left">
+    <Link to={to as any} className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition text-left">
       <span className="text-muted-foreground">{icon}</span>
       <span className="flex-1 text-sm">{label}</span>
       <ChevronRight className="h-4 w-4 text-muted-foreground" />
-    </button>
+    </Link>
   );
 }
