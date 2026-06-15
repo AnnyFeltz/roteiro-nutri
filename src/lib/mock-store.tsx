@@ -27,6 +27,7 @@ export interface Patient {
   nextConsult: string;
   lastConsult: string;
   todayTime?: string;
+  lastActivePlanId?: string;
   // Anamnese
   allergies: string;
   medicalHistory: string;
@@ -254,6 +255,7 @@ interface Store {
   updatePatient: (id: string, patch: Partial<Patient>) => void;
   updatePatientByPatient: (id: string, patch: Partial<Patient>) => void;
   deactivatePatient: (id: string) => void;
+  reactivatePatient: (id: string) => void;
   getPatient: (id: string) => Patient | undefined;
   getActivePlan: (patientId: string) => MealPlan | undefined;
   getPlansForPatient: (patientId: string) => MealPlan[];
@@ -270,6 +272,17 @@ interface Store {
 const StoreCtx = createContext<Store | null>(null);
 
 const SESSION_KEY = "roteiro-nutri-session";
+const DATA_KEY = "roteiro-nutri-data-v2";
+
+function loadData<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 export function MockStoreProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session>(() => {
