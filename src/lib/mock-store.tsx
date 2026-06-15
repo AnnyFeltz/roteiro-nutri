@@ -285,21 +285,21 @@ function loadData<T>(key: string, fallback: T): T {
 }
 
 export function MockStoreProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session>(() => {
-    try {
-      const raw = localStorage.getItem(SESSION_KEY);
-      return raw ? JSON.parse(raw) : { role: null };
-    } catch {
-      return { role: null };
-    }
-  });
-  const [patients, setPatients] = useState<Patient[]>(PATIENTS);
-  const [plans, setPlans] = useState<MealPlan[]>([seedPlan]);
-  const [patientUpdates, setPatientUpdates] = useState<PatientUpdate[]>([]);
+  const [session, setSession] = useState<Session>(() => loadData<Session>(SESSION_KEY, { role: null }));
+  const initial = loadData<{ patients?: Patient[]; plans?: MealPlan[]; patientUpdates?: PatientUpdate[] }>(DATA_KEY, {});
+  const [patients, setPatients] = useState<Patient[]>(initial.patients ?? PATIENTS);
+  const [plans, setPlans] = useState<MealPlan[]>(initial.plans ?? [seedPlan]);
+  const [patientUpdates, setPatientUpdates] = useState<PatientUpdate[]>(initial.patientUpdates ?? []);
 
   useEffect(() => {
     try { localStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch {}
   }, [session]);
+
+  useEffect(() => {
+    try { localStorage.setItem(DATA_KEY, JSON.stringify({ patients, plans, patientUpdates })); } catch {}
+    // light-weight cookie marker for visit persistence
+    try { document.cookie = `roteiro-nutri-visited=1; max-age=${60*60*24*365}; path=/; SameSite=Lax`; } catch {}
+  }, [patients, plans, patientUpdates]);
 
   const store: Store = {
     session,
@@ -363,8 +363,20 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
       }));
     },
     deactivatePatient: (id) => {
-      setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, active: false } : x)));
+      const activePlan = plans.find((pl) => pl.patientId === id && pl.active);
+      setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, active: false, lastActivePlanId: activePlan?.id ?? x.lastActivePlanId } : x)));
       setPlans((prev) => prev.map((pl) => (pl.patientId === id ? { ...pl, active: false } : pl)));
+    },
+    reactivatePatient: (id) => {
+      const pat = patients.find((x) => x.id === id);
+      const restoreId = pat?.lastActivePlanId;
+      setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, active: true } : x)));
+      if (restoreId) {
+        setPlans((prev) => prev.map((pl) => {
+          if (pl.patientId !== id) return pl;
+          return pl.id === restoreId ? { ...pl, active: true } : { ...pl, active: false };
+        }));
+      }
     },
     getPatient: (id) => patients.find((p) => p.id === id),
     getActivePlan: (patientId) => {
