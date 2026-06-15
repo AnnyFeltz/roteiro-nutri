@@ -159,7 +159,10 @@ function Evolucao() {
 
       {/* Achievements */}
       <Card className="p-5 bg-card border-border">
-        <p className="text-sm font-medium mb-3 flex items-center gap-2"><Trophy className="h-4 w-4 text-terracotta" /> Conquistas</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-sm font-medium flex items-center gap-2"><Trophy className="h-4 w-4 text-terracotta" /> Conquistas</p>
+          <Link to="/app/conquistas" className="text-xs text-primary font-medium">Ver todas</Link>
+        </div>
         <ul className="space-y-2">
           {[
             { i: "🔥", t: "7 dias de sequência", d: "Adesão completa esta semana" },
