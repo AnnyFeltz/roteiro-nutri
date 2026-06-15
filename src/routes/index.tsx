@@ -102,7 +102,7 @@ function Landing() {
 
       <footer className="max-w-7xl mx-auto px-6 md:px-12 py-8 text-sm text-muted-foreground flex justify-between">
         <span>© Roteiro Nutri</span>
-        <span>Feito com 🌱 para nutricionistas</span>
+        <span>Feito com 💚 para nutricionistas</span>
       </footer>
     </div>
   );
