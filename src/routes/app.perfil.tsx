@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, LogOut, AlertTriangle, Target, Ruler, Mail, Phone, CalendarCheck, FileText, Bell, ChevronRight, Shield } from "lucide-react";
+import { ArrowLeft, LogOut, AlertTriangle, Target, Ruler, Mail, Phone, CalendarCheck, FileText, Bell, ChevronRight, Shield, Pencil } from "lucide-react";
 import { bmi, bmiLabel } from "@/lib/nutrition";
 
 export const Route = createFileRoute("/app/perfil")({
