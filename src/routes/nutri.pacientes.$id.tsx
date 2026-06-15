@@ -94,7 +94,12 @@ function PatientDetail() {
         <TabsContent value="consultas" className="mt-5">
           <ConsultasTab
             p={p}
-            onAdd={(c: any) => { addConsultation(p.id, c); toast.success("Atendimento registrado"); }}
+            onAdd={(c: any) => {
+              const r = addConsultation(p.id, c);
+              if (r.ok) toast.success("Atendimento registrado");
+              else toast.error(r.error ?? "Não foi possível registrar");
+              return r.ok;
+            }}
             onDelete={(cid: string) => { deleteConsultation(p.id, cid); toast.success("Atendimento removido"); }}
           />
         </TabsContent>
