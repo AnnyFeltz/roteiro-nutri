@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ArrowLeft, Plus, FileText, ChevronRight, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, FileText, ChevronRight, Trash2, ClipboardList } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { bmi, bmiLabel } from "@/lib/nutrition";
 import { useState } from "react";
@@ -53,7 +53,10 @@ function PatientDetail() {
               <p className="text-sm text-muted-foreground mt-1">{p.age} anos · {(p.heightCm / 100).toFixed(2)} m · {p.weightKg} kg · IMC {imcVal.toFixed(1)} ({bmiLabel(imcVal)})</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+           <Link to="/nutri/pacientes/$id_/ficha" params={{ id: p.id }}>
+             <Button variant="outline" className="gap-2"><ClipboardList className="h-4 w-4" /> Ficha médica/nutricional</Button>
+           </Link>
            <Link to="/nutri/pacientes/$id/plano/editar{$versionId}" params={{ id: p.id, versionId: plan?.id ?? "new" }}>
              <Button className="bg-primary hover:bg-leaf-deep gap-2"><Plus className="h-4 w-4" /> {plan ? "Editar plano" : "Novo plano"}</Button>
            </Link>

@@ -8,7 +8,7 @@ import { ArrowLeft, Info } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/perfil/editar")({
+export const Route = createFileRoute("/app/perfil_/editar")({
   head: () => ({ meta: [{ title: "Editar perfil — Roteiro Nutri" }] }),
   component: EditPerfil,
 });

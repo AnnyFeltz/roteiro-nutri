@@ -6,7 +6,7 @@ import { ArrowLeft, Shield, Eye, Share2, Download, Trash2, FileLock } from "luci
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/perfil/privacidade")({
+export const Route = createFileRoute("/app/perfil_/privacidade")({
   head: () => ({ meta: [{ title: "Privacidade — Roteiro Nutri" }] }),
   component: Privacidade,
 });

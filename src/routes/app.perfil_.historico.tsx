@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, FileText, Flame, Activity } from "lucide-react";
 
-export const Route = createFileRoute("/app/perfil/historico")({
+export const Route = createFileRoute("/app/perfil_/historico")({
   head: () => ({ meta: [{ title: "Histórico de planos — Roteiro Nutri" }] }),
   component: Historico,
 });
