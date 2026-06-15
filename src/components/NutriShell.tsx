@@ -18,7 +18,7 @@ const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: bo
 ];
 
 export function NutriShell() {
-  const { session, nutritionist, logout, patientUpdates } = useStore();
+  const { session, nutritionist, logout, patientUpdates, passwordResets } = useStore();
   const nav = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
