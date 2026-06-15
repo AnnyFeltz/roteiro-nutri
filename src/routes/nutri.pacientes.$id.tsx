@@ -310,12 +310,32 @@ function EvolucaoTab({ p }: any) {
 
 function ConsultasTab({ p, onAdd, onDelete }: any) {
   const today = new Date().toLocaleDateString("pt-BR");
-  const [form, setForm] = useState({ date: today, type: "Retorno", notes: "" });
+  const { patients } = useStore();
+  const [form, setForm] = useState({ date: today, time: "", type: "Retorno", notes: "" });
   const list = p.consultations ?? [];
+
+  // Build time slots 07:00 → 19:30 every 30min
+  const allSlots = (() => {
+    const out: string[] = [];
+    for (let h = 7; h <= 19; h++) {
+      out.push(`${String(h).padStart(2, "0")}:00`);
+      out.push(`${String(h).padStart(2, "0")}:30`);
+    }
+    return out;
+  })();
+  // Already-booked slots across ALL patients on selected date
+  const taken = new Set<string>();
+  patients.forEach((pp: any) => {
+    (pp.consultations ?? []).forEach((c: any) => {
+      if (c.date === form.date && c.time) taken.add(c.time);
+    });
+  });
+
   const submit = () => {
     if (!form.notes.trim()) { toast.error("Adicione uma nota do atendimento"); return; }
-    onAdd(form);
-    setForm({ date: today, type: "Retorno", notes: "" });
+    if (!form.time) { toast.error("Selecione um horário disponível"); return; }
+    const ok = onAdd(form);
+    if (ok) setForm({ date: today, time: "", type: "Retorno", notes: "" });
   };
   return (
     <div className="space-y-5">
@@ -324,11 +344,29 @@ function ConsultasTab({ p, onAdd, onDelete }: any) {
         <div className="grid md:grid-cols-3 gap-3">
           <div>
             <Label>Data</Label>
-            <Input className="mt-1.5" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+            <Input className="mt-1.5" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value, time: "" })} placeholder="dd/mm/aaaa" />
           </div>
-          <div className="md:col-span-2">
+          <div>
+            <Label>Horário</Label>
+            <select
+              className="mt-1.5 w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
+              value={form.time}
+              onChange={(e) => setForm({ ...form, time: e.target.value })}
+            >
+              <option value="">Selecione...</option>
+              {allSlots.map((s) => {
+                const isTaken = taken.has(s);
+                return (
+                  <option key={s} value={s} disabled={isTaken}>
+                    {s}{isTaken ? " — ocupado" : ""}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div>
             <Label>Tipo</Label>
-            <Input className="mt-1.5" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Retorno, Avaliação, Reavaliação..." />
+            <Input className="mt-1.5" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Retorno, Avaliação..." />
           </div>
         </div>
         <div className="mt-3">
@@ -348,7 +386,9 @@ function ConsultasTab({ p, onAdd, onDelete }: any) {
           <ul className="space-y-3">
             {list.map((c: any) => (
               <li key={c.id} className="flex gap-4 p-4 rounded-xl border border-border group">
-                <div className="text-sm font-mono text-muted-foreground w-24 shrink-0">{c.date}</div>
+                <div className="text-sm font-mono text-muted-foreground w-28 shrink-0">
+                  {c.date}{c.time ? ` · ${c.time}` : ""}
+                </div>
                 <div className="flex-1 min-w-0">
                   <Badge variant="outline" className="mb-1">{c.type}</Badge>
                   <p className="text-sm whitespace-pre-wrap">{c.notes}</p>
