@@ -39,6 +39,7 @@ import { Route as AppPerfilPrivacidadeRouteImport } from './routes/app.perfil_.p
 import { Route as AppPerfilNotificacoesRouteImport } from './routes/app.perfil_.notificacoes'
 import { Route as AppPerfilHistoricoRouteImport } from './routes/app.perfil_.historico'
 import { Route as AppPerfilEditarRouteImport } from './routes/app.perfil_.editar'
+import { Route as NutriPacientesIdFichaRouteImport } from './routes/nutri.pacientes.$id_.ficha'
 import { Route as NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport } from './routes/nutri.pacientes.$id_.plano.editar{$versionId}'
 import { Route as NutriPacientesIdPlanoVersionIdRouteImport } from './routes/nutri.pacientes.$id_.plano.$versionId'
 import { Route as NutriAgendaYearMonthDayRouteImport } from './routes/nutri.agenda.$year.$month.$day'
@@ -193,6 +194,11 @@ const AppPerfilEditarRoute = AppPerfilEditarRouteImport.update({
   path: '/perfil/editar',
   getParentRoute: () => AppRoute,
 } as any)
+const NutriPacientesIdFichaRoute = NutriPacientesIdFichaRouteImport.update({
+  id: '/$id_/ficha',
+  path: '/$id/ficha',
+  getParentRoute: () => NutriPacientesRoute,
+} as any)
 const NutriPacientesIdPlanoEditarChar123versionIdChar125Route =
   NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport.update({
     id: '/$id_/plano/editar{$versionId}',
@@ -242,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/nutri/pacientes/$id': typeof NutriPacientesIdRoute
   '/nutri/agenda/': typeof NutriAgendaIndexRoute
   '/nutri/pacientes/': typeof NutriPacientesIndexRoute
+  '/nutri/pacientes/$id/ficha': typeof NutriPacientesIdFichaRoute
   '/nutri/agenda/$year/$month/$day': typeof NutriAgendaYearMonthDayRoute
   '/nutri/pacientes/$id/plano/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
   '/nutri/pacientes/$id/plano/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/nutri/pacientes/$id': typeof NutriPacientesIdRoute
   '/nutri/agenda': typeof NutriAgendaIndexRoute
   '/nutri/pacientes': typeof NutriPacientesIndexRoute
+  '/nutri/pacientes/$id/ficha': typeof NutriPacientesIdFichaRoute
   '/nutri/agenda/$year/$month/$day': typeof NutriAgendaYearMonthDayRoute
   '/nutri/pacientes/$id/plano/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
   '/nutri/pacientes/$id/plano/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
@@ -309,6 +317,7 @@ export interface FileRoutesById {
   '/nutri/pacientes/$id': typeof NutriPacientesIdRoute
   '/nutri/agenda/': typeof NutriAgendaIndexRoute
   '/nutri/pacientes/': typeof NutriPacientesIndexRoute
+  '/nutri/pacientes/$id_/ficha': typeof NutriPacientesIdFichaRoute
   '/nutri/agenda/$year/$month/$day': typeof NutriAgendaYearMonthDayRoute
   '/nutri/pacientes/$id_/plano/$versionId': typeof NutriPacientesIdPlanoVersionIdRoute
   '/nutri/pacientes/$id_/plano/editar{$versionId}': typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
@@ -346,6 +355,7 @@ export interface FileRouteTypes {
     | '/nutri/pacientes/$id'
     | '/nutri/agenda/'
     | '/nutri/pacientes/'
+    | '/nutri/pacientes/$id/ficha'
     | '/nutri/agenda/$year/$month/$day'
     | '/nutri/pacientes/$id/plano/$versionId'
     | '/nutri/pacientes/$id/plano/editar{$versionId}'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/nutri/pacientes/$id'
     | '/nutri/agenda'
     | '/nutri/pacientes'
+    | '/nutri/pacientes/$id/ficha'
     | '/nutri/agenda/$year/$month/$day'
     | '/nutri/pacientes/$id/plano/$versionId'
     | '/nutri/pacientes/$id/plano/editar{$versionId}'
@@ -412,6 +423,7 @@ export interface FileRouteTypes {
     | '/nutri/pacientes/$id'
     | '/nutri/agenda/'
     | '/nutri/pacientes/'
+    | '/nutri/pacientes/$id_/ficha'
     | '/nutri/agenda/$year/$month/$day'
     | '/nutri/pacientes/$id_/plano/$versionId'
     | '/nutri/pacientes/$id_/plano/editar{$versionId}'
@@ -640,6 +652,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPerfilEditarRouteImport
       parentRoute: typeof AppRoute
     }
+    '/nutri/pacientes/$id_/ficha': {
+      id: '/nutri/pacientes/$id_/ficha'
+      path: '/$id/ficha'
+      fullPath: '/nutri/pacientes/$id/ficha'
+      preLoaderRoute: typeof NutriPacientesIdFichaRouteImport
+      parentRoute: typeof NutriPacientesRoute
+    }
     '/nutri/pacientes/$id_/plano/editar{$versionId}': {
       id: '/nutri/pacientes/$id_/plano/editar{$versionId}'
       path: '/$id/plano/editar{$versionId}'
@@ -709,6 +728,7 @@ const NutriAgendaRouteWithChildren = NutriAgendaRoute._addFileChildren(
 interface NutriPacientesRouteChildren {
   NutriPacientesIdRoute: typeof NutriPacientesIdRoute
   NutriPacientesIndexRoute: typeof NutriPacientesIndexRoute
+  NutriPacientesIdFichaRoute: typeof NutriPacientesIdFichaRoute
   NutriPacientesIdPlanoVersionIdRoute: typeof NutriPacientesIdPlanoVersionIdRoute
   NutriPacientesIdPlanoEditarChar123versionIdChar125Route: typeof NutriPacientesIdPlanoEditarChar123versionIdChar125Route
 }
@@ -716,6 +736,7 @@ interface NutriPacientesRouteChildren {
 const NutriPacientesRouteChildren: NutriPacientesRouteChildren = {
   NutriPacientesIdRoute: NutriPacientesIdRoute,
   NutriPacientesIndexRoute: NutriPacientesIndexRoute,
+  NutriPacientesIdFichaRoute: NutriPacientesIdFichaRoute,
   NutriPacientesIdPlanoVersionIdRoute: NutriPacientesIdPlanoVersionIdRoute,
   NutriPacientesIdPlanoEditarChar123versionIdChar125Route:
     NutriPacientesIdPlanoEditarChar123versionIdChar125Route,
