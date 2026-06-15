@@ -23,16 +23,22 @@ import { Route as NutriTacoRouteImport } from './routes/nutri.taco'
 import { Route as NutriRelatoriosRouteImport } from './routes/nutri.relatorios'
 import { Route as NutriPlanosRouteImport } from './routes/nutri.planos'
 import { Route as NutriPacientesRouteImport } from './routes/nutri.pacientes'
+import { Route as NutriNotificacoesRouteImport } from './routes/nutri.notificacoes'
 import { Route as NutriEvolucaoRouteImport } from './routes/nutri.evolucao'
 import { Route as NutriConfiguracoesRouteImport } from './routes/nutri.configuracoes'
 import { Route as NutriAgendaRouteImport } from './routes/nutri.agenda'
 import { Route as AppPlanoRouteImport } from './routes/app.plano'
 import { Route as AppPerfilRouteImport } from './routes/app.perfil'
 import { Route as AppEvolucaoRouteImport } from './routes/app.evolucao'
+import { Route as AppConquistasRouteImport } from './routes/app.conquistas'
 import { Route as NutriPacientesIndexRouteImport } from './routes/nutri.pacientes.index'
 import { Route as NutriAgendaIndexRouteImport } from './routes/nutri.agenda.index'
 import { Route as NutriPacientesIdRouteImport } from './routes/nutri.pacientes.$id'
 import { Route as AppPlanoMealIdRouteImport } from './routes/app.plano_.$mealId'
+import { Route as AppPerfilPrivacidadeRouteImport } from './routes/app.perfil.privacidade'
+import { Route as AppPerfilNotificacoesRouteImport } from './routes/app.perfil.notificacoes'
+import { Route as AppPerfilHistoricoRouteImport } from './routes/app.perfil.historico'
+import { Route as AppPerfilEditarRouteImport } from './routes/app.perfil.editar'
 import { Route as NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport } from './routes/nutri.pacientes.$id_.plano.editar{$versionId}'
 import { Route as NutriPacientesIdPlanoVersionIdRouteImport } from './routes/nutri.pacientes.$id_.plano.$versionId'
 import { Route as NutriAgendaYearMonthDayRouteImport } from './routes/nutri.agenda.$year.$month.$day'
@@ -107,6 +113,11 @@ const NutriPacientesRoute = NutriPacientesRouteImport.update({
   path: '/pacientes',
   getParentRoute: () => NutriRoute,
 } as any)
+const NutriNotificacoesRoute = NutriNotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => NutriRoute,
+} as any)
 const NutriEvolucaoRoute = NutriEvolucaoRouteImport.update({
   id: '/evolucao',
   path: '/evolucao',
@@ -137,6 +148,11 @@ const AppEvolucaoRoute = AppEvolucaoRouteImport.update({
   path: '/evolucao',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConquistasRoute = AppConquistasRouteImport.update({
+  id: '/conquistas',
+  path: '/conquistas',
+  getParentRoute: () => AppRoute,
+} as any)
 const NutriPacientesIndexRoute = NutriPacientesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -156,6 +172,26 @@ const AppPlanoMealIdRoute = AppPlanoMealIdRouteImport.update({
   id: '/plano_/$mealId',
   path: '/plano/$mealId',
   getParentRoute: () => AppRoute,
+} as any)
+const AppPerfilPrivacidadeRoute = AppPerfilPrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => AppPerfilRoute,
+} as any)
+const AppPerfilNotificacoesRoute = AppPerfilNotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => AppPerfilRoute,
+} as any)
+const AppPerfilHistoricoRoute = AppPerfilHistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
+  getParentRoute: () => AppPerfilRoute,
+} as any)
+const AppPerfilEditarRoute = AppPerfilEditarRouteImport.update({
+  id: '/editar',
+  path: '/editar',
+  getParentRoute: () => AppPerfilRoute,
 } as any)
 const NutriPacientesIdPlanoEditarChar123versionIdChar125Route =
   NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport.update({
@@ -183,12 +219,14 @@ export interface FileRoutesByFullPath {
   '/nutri': typeof NutriRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/app/conquistas': typeof AppConquistasRoute
   '/app/evolucao': typeof AppEvolucaoRoute
-  '/app/perfil': typeof AppPerfilRoute
+  '/app/perfil': typeof AppPerfilRouteWithChildren
   '/app/plano': typeof AppPlanoRoute
   '/nutri/agenda': typeof NutriAgendaRouteWithChildren
   '/nutri/configuracoes': typeof NutriConfiguracoesRoute
   '/nutri/evolucao': typeof NutriEvolucaoRoute
+  '/nutri/notificacoes': typeof NutriNotificacoesRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/nutri/planos': typeof NutriPlanosRoute
   '/nutri/relatorios': typeof NutriRelatoriosRoute
@@ -196,6 +234,10 @@ export interface FileRoutesByFullPath {
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
+  '/app/perfil/editar': typeof AppPerfilEditarRoute
+  '/app/perfil/historico': typeof AppPerfilHistoricoRoute
+  '/app/perfil/notificacoes': typeof AppPerfilNotificacoesRoute
+  '/app/perfil/privacidade': typeof AppPerfilPrivacidadeRoute
   '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRoute
   '/nutri/agenda/': typeof NutriAgendaIndexRoute
@@ -210,17 +252,23 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/app/conquistas': typeof AppConquistasRoute
   '/app/evolucao': typeof AppEvolucaoRoute
-  '/app/perfil': typeof AppPerfilRoute
+  '/app/perfil': typeof AppPerfilRouteWithChildren
   '/app/plano': typeof AppPlanoRoute
   '/nutri/configuracoes': typeof NutriConfiguracoesRoute
   '/nutri/evolucao': typeof NutriEvolucaoRoute
+  '/nutri/notificacoes': typeof NutriNotificacoesRoute
   '/nutri/planos': typeof NutriPlanosRoute
   '/nutri/relatorios': typeof NutriRelatoriosRoute
   '/nutri/taco': typeof NutriTacoRoute
   '/paciente/login': typeof PacienteLoginRoute
   '/app': typeof AppIndexRoute
   '/nutri': typeof NutriIndexRoute
+  '/app/perfil/editar': typeof AppPerfilEditarRoute
+  '/app/perfil/historico': typeof AppPerfilHistoricoRoute
+  '/app/perfil/notificacoes': typeof AppPerfilNotificacoesRoute
+  '/app/perfil/privacidade': typeof AppPerfilPrivacidadeRoute
   '/app/plano/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRoute
   '/nutri/agenda': typeof NutriAgendaIndexRoute
@@ -238,12 +286,14 @@ export interface FileRoutesById {
   '/nutri': typeof NutriRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/app/conquistas': typeof AppConquistasRoute
   '/app/evolucao': typeof AppEvolucaoRoute
-  '/app/perfil': typeof AppPerfilRoute
+  '/app/perfil': typeof AppPerfilRouteWithChildren
   '/app/plano': typeof AppPlanoRoute
   '/nutri/agenda': typeof NutriAgendaRouteWithChildren
   '/nutri/configuracoes': typeof NutriConfiguracoesRoute
   '/nutri/evolucao': typeof NutriEvolucaoRoute
+  '/nutri/notificacoes': typeof NutriNotificacoesRoute
   '/nutri/pacientes': typeof NutriPacientesRouteWithChildren
   '/nutri/planos': typeof NutriPlanosRoute
   '/nutri/relatorios': typeof NutriRelatoriosRoute
@@ -251,6 +301,10 @@ export interface FileRoutesById {
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
+  '/app/perfil/editar': typeof AppPerfilEditarRoute
+  '/app/perfil/historico': typeof AppPerfilHistoricoRoute
+  '/app/perfil/notificacoes': typeof AppPerfilNotificacoesRoute
+  '/app/perfil/privacidade': typeof AppPerfilPrivacidadeRoute
   '/app/plano_/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRoute
   '/nutri/agenda/': typeof NutriAgendaIndexRoute
@@ -269,12 +323,14 @@ export interface FileRouteTypes {
     | '/nutri'
     | '/reset-password'
     | '/signup'
+    | '/app/conquistas'
     | '/app/evolucao'
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/agenda'
     | '/nutri/configuracoes'
     | '/nutri/evolucao'
+    | '/nutri/notificacoes'
     | '/nutri/pacientes'
     | '/nutri/planos'
     | '/nutri/relatorios'
@@ -282,6 +338,10 @@ export interface FileRouteTypes {
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
+    | '/app/perfil/editar'
+    | '/app/perfil/historico'
+    | '/app/perfil/notificacoes'
+    | '/app/perfil/privacidade'
     | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/agenda/'
@@ -296,17 +356,23 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/app/conquistas'
     | '/app/evolucao'
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/configuracoes'
     | '/nutri/evolucao'
+    | '/nutri/notificacoes'
     | '/nutri/planos'
     | '/nutri/relatorios'
     | '/nutri/taco'
     | '/paciente/login'
     | '/app'
     | '/nutri'
+    | '/app/perfil/editar'
+    | '/app/perfil/historico'
+    | '/app/perfil/notificacoes'
+    | '/app/perfil/privacidade'
     | '/app/plano/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/agenda'
@@ -323,12 +389,14 @@ export interface FileRouteTypes {
     | '/nutri'
     | '/reset-password'
     | '/signup'
+    | '/app/conquistas'
     | '/app/evolucao'
     | '/app/perfil'
     | '/app/plano'
     | '/nutri/agenda'
     | '/nutri/configuracoes'
     | '/nutri/evolucao'
+    | '/nutri/notificacoes'
     | '/nutri/pacientes'
     | '/nutri/planos'
     | '/nutri/relatorios'
@@ -336,6 +404,10 @@ export interface FileRouteTypes {
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
+    | '/app/perfil/editar'
+    | '/app/perfil/historico'
+    | '/app/perfil/notificacoes'
+    | '/app/perfil/privacidade'
     | '/app/plano_/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/agenda/'
@@ -456,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NutriPacientesRouteImport
       parentRoute: typeof NutriRoute
     }
+    '/nutri/notificacoes': {
+      id: '/nutri/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/nutri/notificacoes'
+      preLoaderRoute: typeof NutriNotificacoesRouteImport
+      parentRoute: typeof NutriRoute
+    }
     '/nutri/evolucao': {
       id: '/nutri/evolucao'
       path: '/evolucao'
@@ -498,6 +577,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEvolucaoRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/conquistas': {
+      id: '/app/conquistas'
+      path: '/conquistas'
+      fullPath: '/app/conquistas'
+      preLoaderRoute: typeof AppConquistasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/nutri/pacientes/': {
       id: '/nutri/pacientes/'
       path: '/'
@@ -526,6 +612,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlanoMealIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/perfil/privacidade': {
+      id: '/app/perfil/privacidade'
+      path: '/privacidade'
+      fullPath: '/app/perfil/privacidade'
+      preLoaderRoute: typeof AppPerfilPrivacidadeRouteImport
+      parentRoute: typeof AppPerfilRoute
+    }
+    '/app/perfil/notificacoes': {
+      id: '/app/perfil/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/app/perfil/notificacoes'
+      preLoaderRoute: typeof AppPerfilNotificacoesRouteImport
+      parentRoute: typeof AppPerfilRoute
+    }
+    '/app/perfil/historico': {
+      id: '/app/perfil/historico'
+      path: '/historico'
+      fullPath: '/app/perfil/historico'
+      preLoaderRoute: typeof AppPerfilHistoricoRouteImport
+      parentRoute: typeof AppPerfilRoute
+    }
+    '/app/perfil/editar': {
+      id: '/app/perfil/editar'
+      path: '/editar'
+      fullPath: '/app/perfil/editar'
+      preLoaderRoute: typeof AppPerfilEditarRouteImport
+      parentRoute: typeof AppPerfilRoute
+    }
     '/nutri/pacientes/$id_/plano/editar{$versionId}': {
       id: '/nutri/pacientes/$id_/plano/editar{$versionId}'
       path: '/$id/plano/editar{$versionId}'
@@ -550,17 +664,37 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppPerfilRouteChildren {
+  AppPerfilEditarRoute: typeof AppPerfilEditarRoute
+  AppPerfilHistoricoRoute: typeof AppPerfilHistoricoRoute
+  AppPerfilNotificacoesRoute: typeof AppPerfilNotificacoesRoute
+  AppPerfilPrivacidadeRoute: typeof AppPerfilPrivacidadeRoute
+}
+
+const AppPerfilRouteChildren: AppPerfilRouteChildren = {
+  AppPerfilEditarRoute: AppPerfilEditarRoute,
+  AppPerfilHistoricoRoute: AppPerfilHistoricoRoute,
+  AppPerfilNotificacoesRoute: AppPerfilNotificacoesRoute,
+  AppPerfilPrivacidadeRoute: AppPerfilPrivacidadeRoute,
+}
+
+const AppPerfilRouteWithChildren = AppPerfilRoute._addFileChildren(
+  AppPerfilRouteChildren,
+)
+
 interface AppRouteChildren {
+  AppConquistasRoute: typeof AppConquistasRoute
   AppEvolucaoRoute: typeof AppEvolucaoRoute
-  AppPerfilRoute: typeof AppPerfilRoute
+  AppPerfilRoute: typeof AppPerfilRouteWithChildren
   AppPlanoRoute: typeof AppPlanoRoute
   AppIndexRoute: typeof AppIndexRoute
   AppPlanoMealIdRoute: typeof AppPlanoMealIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppConquistasRoute: AppConquistasRoute,
   AppEvolucaoRoute: AppEvolucaoRoute,
-  AppPerfilRoute: AppPerfilRoute,
+  AppPerfilRoute: AppPerfilRouteWithChildren,
   AppPlanoRoute: AppPlanoRoute,
   AppIndexRoute: AppIndexRoute,
   AppPlanoMealIdRoute: AppPlanoMealIdRoute,
@@ -605,6 +739,7 @@ interface NutriRouteChildren {
   NutriAgendaRoute: typeof NutriAgendaRouteWithChildren
   NutriConfiguracoesRoute: typeof NutriConfiguracoesRoute
   NutriEvolucaoRoute: typeof NutriEvolucaoRoute
+  NutriNotificacoesRoute: typeof NutriNotificacoesRoute
   NutriPacientesRoute: typeof NutriPacientesRouteWithChildren
   NutriPlanosRoute: typeof NutriPlanosRoute
   NutriRelatoriosRoute: typeof NutriRelatoriosRoute
@@ -616,6 +751,7 @@ const NutriRouteChildren: NutriRouteChildren = {
   NutriAgendaRoute: NutriAgendaRouteWithChildren,
   NutriConfiguracoesRoute: NutriConfiguracoesRoute,
   NutriEvolucaoRoute: NutriEvolucaoRoute,
+  NutriNotificacoesRoute: NutriNotificacoesRoute,
   NutriPacientesRoute: NutriPacientesRouteWithChildren,
   NutriPlanosRoute: NutriPlanosRoute,
   NutriRelatoriosRoute: NutriRelatoriosRoute,

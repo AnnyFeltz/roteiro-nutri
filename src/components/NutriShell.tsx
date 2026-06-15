@@ -18,10 +18,11 @@ const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: bo
 ];
 
 export function NutriShell() {
-  const { session, nutritionist, logout } = useStore();
+  const { session, nutritionist, logout, patientUpdates } = useStore();
   const nav = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const unread = patientUpdates.filter((u) => !u.read).length;
 
   useEffect(() => {
     if (session.role !== "nutricionista") nav({ to: "/login" });
