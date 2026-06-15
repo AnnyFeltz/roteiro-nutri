@@ -301,20 +301,33 @@ function loadData<T>(key: string, fallback: T): T {
 
 export function MockStoreProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session>(() => loadData<Session>(SESSION_KEY, { role: null }));
-  const initial = loadData<{ patients?: Patient[]; plans?: MealPlan[]; patientUpdates?: PatientUpdate[] }>(DATA_KEY, {});
+  const initial = loadData<{
+    patients?: Patient[]; plans?: MealPlan[]; patientUpdates?: PatientUpdate[];
+    passwordResets?: PasswordResetRequest[]; nutriPassword?: string;
+    patientPasswords?: Record<string, string>;
+  }>(DATA_KEY, {});
   const [patients, setPatients] = useState<Patient[]>(initial.patients ?? PATIENTS);
   const [plans, setPlans] = useState<MealPlan[]>(initial.plans ?? [seedPlan]);
   const [patientUpdates, setPatientUpdates] = useState<PatientUpdate[]>(initial.patientUpdates ?? []);
+  const [passwordResets, setPasswordResets] = useState<PasswordResetRequest[]>(initial.passwordResets ?? []);
+  const [nutriPassword, setNutriPassword] = useState<string>(initial.nutriPassword ?? "demo1234");
+  const [patientPasswords, setPatientPasswords] = useState<Record<string, string>>(
+    initial.patientPasswords ?? Object.fromEntries((initial.patients ?? PATIENTS).map((p) => [p.id, "demo1234"]))
+  );
 
   useEffect(() => {
     try { localStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch {}
   }, [session]);
 
   useEffect(() => {
-    try { localStorage.setItem(DATA_KEY, JSON.stringify({ patients, plans, patientUpdates })); } catch {}
+    try {
+      localStorage.setItem(DATA_KEY, JSON.stringify({
+        patients, plans, patientUpdates, passwordResets, nutriPassword, patientPasswords,
+      }));
+    } catch {}
     // light-weight cookie marker for visit persistence
     try { document.cookie = `roteiro-nutri-visited=1; max-age=${60*60*24*365}; path=/; SameSite=Lax`; } catch {}
-  }, [patients, plans, patientUpdates]);
+  }, [patients, plans, patientUpdates, passwordResets, nutriPassword, patientPasswords]);
 
   const store: Store = {
     session,
