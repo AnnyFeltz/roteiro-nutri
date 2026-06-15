@@ -35,10 +35,10 @@ import { Route as NutriPacientesIndexRouteImport } from './routes/nutri.paciente
 import { Route as NutriAgendaIndexRouteImport } from './routes/nutri.agenda.index'
 import { Route as NutriPacientesIdRouteImport } from './routes/nutri.pacientes.$id'
 import { Route as AppPlanoMealIdRouteImport } from './routes/app.plano_.$mealId'
-import { Route as AppPerfilPrivacidadeRouteImport } from './routes/app.perfil.privacidade'
-import { Route as AppPerfilNotificacoesRouteImport } from './routes/app.perfil.notificacoes'
-import { Route as AppPerfilHistoricoRouteImport } from './routes/app.perfil.historico'
-import { Route as AppPerfilEditarRouteImport } from './routes/app.perfil.editar'
+import { Route as AppPerfilPrivacidadeRouteImport } from './routes/app.perfil_.privacidade'
+import { Route as AppPerfilNotificacoesRouteImport } from './routes/app.perfil_.notificacoes'
+import { Route as AppPerfilHistoricoRouteImport } from './routes/app.perfil_.historico'
+import { Route as AppPerfilEditarRouteImport } from './routes/app.perfil_.editar'
 import { Route as NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport } from './routes/nutri.pacientes.$id_.plano.editar{$versionId}'
 import { Route as NutriPacientesIdPlanoVersionIdRouteImport } from './routes/nutri.pacientes.$id_.plano.$versionId'
 import { Route as NutriAgendaYearMonthDayRouteImport } from './routes/nutri.agenda.$year.$month.$day'
@@ -174,24 +174,24 @@ const AppPlanoMealIdRoute = AppPlanoMealIdRouteImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 const AppPerfilPrivacidadeRoute = AppPerfilPrivacidadeRouteImport.update({
-  id: '/privacidade',
-  path: '/privacidade',
-  getParentRoute: () => AppPerfilRoute,
+  id: '/perfil_/privacidade',
+  path: '/perfil/privacidade',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppPerfilNotificacoesRoute = AppPerfilNotificacoesRouteImport.update({
-  id: '/notificacoes',
-  path: '/notificacoes',
-  getParentRoute: () => AppPerfilRoute,
+  id: '/perfil_/notificacoes',
+  path: '/perfil/notificacoes',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppPerfilHistoricoRoute = AppPerfilHistoricoRouteImport.update({
-  id: '/historico',
-  path: '/historico',
-  getParentRoute: () => AppPerfilRoute,
+  id: '/perfil_/historico',
+  path: '/perfil/historico',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppPerfilEditarRoute = AppPerfilEditarRouteImport.update({
-  id: '/editar',
-  path: '/editar',
-  getParentRoute: () => AppPerfilRoute,
+  id: '/perfil_/editar',
+  path: '/perfil/editar',
+  getParentRoute: () => AppRoute,
 } as any)
 const NutriPacientesIdPlanoEditarChar123versionIdChar125Route =
   NutriPacientesIdPlanoEditarChar123versionIdChar125RouteImport.update({
@@ -221,7 +221,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/app/conquistas': typeof AppConquistasRoute
   '/app/evolucao': typeof AppEvolucaoRoute
-  '/app/perfil': typeof AppPerfilRouteWithChildren
+  '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/agenda': typeof NutriAgendaRouteWithChildren
   '/nutri/configuracoes': typeof NutriConfiguracoesRoute
@@ -254,7 +254,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/app/conquistas': typeof AppConquistasRoute
   '/app/evolucao': typeof AppEvolucaoRoute
-  '/app/perfil': typeof AppPerfilRouteWithChildren
+  '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/configuracoes': typeof NutriConfiguracoesRoute
   '/nutri/evolucao': typeof NutriEvolucaoRoute
@@ -288,7 +288,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/app/conquistas': typeof AppConquistasRoute
   '/app/evolucao': typeof AppEvolucaoRoute
-  '/app/perfil': typeof AppPerfilRouteWithChildren
+  '/app/perfil': typeof AppPerfilRoute
   '/app/plano': typeof AppPlanoRoute
   '/nutri/agenda': typeof NutriAgendaRouteWithChildren
   '/nutri/configuracoes': typeof NutriConfiguracoesRoute
@@ -301,10 +301,10 @@ export interface FileRoutesById {
   '/paciente/login': typeof PacienteLoginRoute
   '/app/': typeof AppIndexRoute
   '/nutri/': typeof NutriIndexRoute
-  '/app/perfil/editar': typeof AppPerfilEditarRoute
-  '/app/perfil/historico': typeof AppPerfilHistoricoRoute
-  '/app/perfil/notificacoes': typeof AppPerfilNotificacoesRoute
-  '/app/perfil/privacidade': typeof AppPerfilPrivacidadeRoute
+  '/app/perfil_/editar': typeof AppPerfilEditarRoute
+  '/app/perfil_/historico': typeof AppPerfilHistoricoRoute
+  '/app/perfil_/notificacoes': typeof AppPerfilNotificacoesRoute
+  '/app/perfil_/privacidade': typeof AppPerfilPrivacidadeRoute
   '/app/plano_/$mealId': typeof AppPlanoMealIdRoute
   '/nutri/pacientes/$id': typeof NutriPacientesIdRoute
   '/nutri/agenda/': typeof NutriAgendaIndexRoute
@@ -404,10 +404,10 @@ export interface FileRouteTypes {
     | '/paciente/login'
     | '/app/'
     | '/nutri/'
-    | '/app/perfil/editar'
-    | '/app/perfil/historico'
-    | '/app/perfil/notificacoes'
-    | '/app/perfil/privacidade'
+    | '/app/perfil_/editar'
+    | '/app/perfil_/historico'
+    | '/app/perfil_/notificacoes'
+    | '/app/perfil_/privacidade'
     | '/app/plano_/$mealId'
     | '/nutri/pacientes/$id'
     | '/nutri/agenda/'
@@ -612,33 +612,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlanoMealIdRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/perfil/privacidade': {
-      id: '/app/perfil/privacidade'
-      path: '/privacidade'
+    '/app/perfil_/privacidade': {
+      id: '/app/perfil_/privacidade'
+      path: '/perfil/privacidade'
       fullPath: '/app/perfil/privacidade'
       preLoaderRoute: typeof AppPerfilPrivacidadeRouteImport
-      parentRoute: typeof AppPerfilRoute
+      parentRoute: typeof AppRoute
     }
-    '/app/perfil/notificacoes': {
-      id: '/app/perfil/notificacoes'
-      path: '/notificacoes'
+    '/app/perfil_/notificacoes': {
+      id: '/app/perfil_/notificacoes'
+      path: '/perfil/notificacoes'
       fullPath: '/app/perfil/notificacoes'
       preLoaderRoute: typeof AppPerfilNotificacoesRouteImport
-      parentRoute: typeof AppPerfilRoute
+      parentRoute: typeof AppRoute
     }
-    '/app/perfil/historico': {
-      id: '/app/perfil/historico'
-      path: '/historico'
+    '/app/perfil_/historico': {
+      id: '/app/perfil_/historico'
+      path: '/perfil/historico'
       fullPath: '/app/perfil/historico'
       preLoaderRoute: typeof AppPerfilHistoricoRouteImport
-      parentRoute: typeof AppPerfilRoute
+      parentRoute: typeof AppRoute
     }
-    '/app/perfil/editar': {
-      id: '/app/perfil/editar'
-      path: '/editar'
+    '/app/perfil_/editar': {
+      id: '/app/perfil_/editar'
+      path: '/perfil/editar'
       fullPath: '/app/perfil/editar'
       preLoaderRoute: typeof AppPerfilEditarRouteImport
-      parentRoute: typeof AppPerfilRoute
+      parentRoute: typeof AppRoute
     }
     '/nutri/pacientes/$id_/plano/editar{$versionId}': {
       id: '/nutri/pacientes/$id_/plano/editar{$versionId}'
@@ -664,39 +664,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AppPerfilRouteChildren {
+interface AppRouteChildren {
+  AppConquistasRoute: typeof AppConquistasRoute
+  AppEvolucaoRoute: typeof AppEvolucaoRoute
+  AppPerfilRoute: typeof AppPerfilRoute
+  AppPlanoRoute: typeof AppPlanoRoute
+  AppIndexRoute: typeof AppIndexRoute
   AppPerfilEditarRoute: typeof AppPerfilEditarRoute
   AppPerfilHistoricoRoute: typeof AppPerfilHistoricoRoute
   AppPerfilNotificacoesRoute: typeof AppPerfilNotificacoesRoute
   AppPerfilPrivacidadeRoute: typeof AppPerfilPrivacidadeRoute
-}
-
-const AppPerfilRouteChildren: AppPerfilRouteChildren = {
-  AppPerfilEditarRoute: AppPerfilEditarRoute,
-  AppPerfilHistoricoRoute: AppPerfilHistoricoRoute,
-  AppPerfilNotificacoesRoute: AppPerfilNotificacoesRoute,
-  AppPerfilPrivacidadeRoute: AppPerfilPrivacidadeRoute,
-}
-
-const AppPerfilRouteWithChildren = AppPerfilRoute._addFileChildren(
-  AppPerfilRouteChildren,
-)
-
-interface AppRouteChildren {
-  AppConquistasRoute: typeof AppConquistasRoute
-  AppEvolucaoRoute: typeof AppEvolucaoRoute
-  AppPerfilRoute: typeof AppPerfilRouteWithChildren
-  AppPlanoRoute: typeof AppPlanoRoute
-  AppIndexRoute: typeof AppIndexRoute
   AppPlanoMealIdRoute: typeof AppPlanoMealIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppConquistasRoute: AppConquistasRoute,
   AppEvolucaoRoute: AppEvolucaoRoute,
-  AppPerfilRoute: AppPerfilRouteWithChildren,
+  AppPerfilRoute: AppPerfilRoute,
   AppPlanoRoute: AppPlanoRoute,
   AppIndexRoute: AppIndexRoute,
+  AppPerfilEditarRoute: AppPerfilEditarRoute,
+  AppPerfilHistoricoRoute: AppPerfilHistoricoRoute,
+  AppPerfilNotificacoesRoute: AppPerfilNotificacoesRoute,
+  AppPerfilPrivacidadeRoute: AppPerfilPrivacidadeRoute,
   AppPlanoMealIdRoute: AppPlanoMealIdRoute,
 }
 

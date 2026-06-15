@@ -5,7 +5,7 @@ import { ArrowLeft, Bell, Apple, CalendarCheck, MessageSquare, Trophy } from "lu
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/perfil/notificacoes")({
+export const Route = createFileRoute("/app/perfil_/notificacoes")({
   head: () => ({ meta: [{ title: "Notificações — Roteiro Nutri" }] }),
   component: Notificacoes,
 });
