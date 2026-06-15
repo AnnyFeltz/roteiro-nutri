@@ -186,14 +186,17 @@ function AnamneseTab({ p, onSave }: any) {
 
 function AvaliacaoTab({ p, imcVal }: any) {
   return (
-    <div className="grid md:grid-cols-3 gap-4">
-      <Stat label="Peso atual" value={`${p.weightKg} kg`} large />
-      <Stat label="IMC" value={imcVal.toFixed(1)} sub={bmiLabel(imcVal)} large />
-      <Stat label="% Gordura corporal" value={`${p.bodyFatPct}%`} large />
-      <Stat label="% Massa magra" value={`${p.leanMassPct}%`} large />
-      <Stat label="Altura" value={`${p.heightCm} cm`} large />
-      <Stat label="Peso alvo" value={`${p.targetWeightKg} kg`} large />
-    </div>
+    <Card className="p-6 bg-card border-border">
+      <h3 className="font-display font-semibold text-lg mb-4">Avaliação física</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <Stat label="Peso atual" value={`${p.weightKg} kg`} large />
+        <Stat label="IMC" value={imcVal.toFixed(1)} sub={bmiLabel(imcVal)} large />
+        <Stat label="% Gordura corporal" value={`${p.bodyFatPct}%`} large />
+        <Stat label="% Massa magra" value={`${p.leanMassPct}%`} large />
+        <Stat label="Altura" value={`${p.heightCm} cm`} large />
+        <Stat label="Peso alvo" value={`${p.targetWeightKg} kg`} large />
+      </div>
+    </Card>
   );
 }
 
