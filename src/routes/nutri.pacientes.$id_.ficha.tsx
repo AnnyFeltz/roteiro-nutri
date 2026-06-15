@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useStore } from "@/lib/mock-store";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Printer, ClipboardList } from "lucide-react";
+import { ArrowLeft, FileDown, ClipboardList } from "lucide-react";
 import { bmi, bmiLabel } from "@/lib/nutrition";
 import { calcFood, calcMealKcal, foodIcon } from "@/lib/food-utils";
 import { getFood } from "@/lib/taco-foods";
+import { exportFichaPDF } from "@/lib/pdf-ficha";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/nutri/pacientes/$id_/ficha")({
   head: () => ({ meta: [{ title: "Ficha médica/nutricional — Roteiro Nutri" }] }),
@@ -29,8 +31,8 @@ function Ficha() {
         <Link to="/nutri/pacientes/$id" params={{ id: p.id }} className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1.5">
           <ArrowLeft className="h-4 w-4" /> Voltar ao prontuário
         </Link>
-        <Button onClick={() => window.print()} className="bg-primary hover:bg-leaf-deep gap-2">
-          <Printer className="h-4 w-4" /> Exportar PDF profissional
+        <Button onClick={() => { exportFichaPDF(p, plan, nutritionist); toast.success("Ficha exportada em PDF"); }} className="bg-primary hover:bg-leaf-deep gap-2">
+          <FileDown className="h-4 w-4" /> Exportar PDF profissional
         </Button>
       </div>
 

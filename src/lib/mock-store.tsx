@@ -35,7 +35,7 @@ export interface Patient {
   foodRecall: string;
   // Evolution series (weight by month label)
   evolution: { month: string; weight: number }[];
-  consultations?: { id: string; date: string; type: string; notes: string }[];
+  consultations?: { id: string; date: string; time?: string; type: string; notes: string }[];
   avatarColor: string;
 }
 
@@ -240,6 +240,14 @@ export interface PatientUpdate {
   read: boolean;
 }
 
+export interface PasswordResetRequest {
+  id: string;
+  patientId: string;
+  at: string;
+  status: "pendente" | "aprovada" | "negada";
+  newPassword?: string;
+}
+
 // ---------- Store ----------
 interface Store {
   session: Session;
@@ -247,6 +255,9 @@ interface Store {
   patients: Patient[];
   plans: MealPlan[];
   patientUpdates: PatientUpdate[];
+  passwordResets: PasswordResetRequest[];
+  nutriPassword: string;
+  patientPasswords: Record<string, string>;
   loginNutri: (email: string, password: string) => boolean;
   loginPatient: (email: string, password: string) => string | null;
   logout: () => void;
@@ -263,10 +274,14 @@ interface Store {
   upsertPlan: (plan: MealPlan) => void;
   toggleMealConsumed: (planId: string, mealId: string) => void;
   substituteFood: (planId: string, mealId: string, foodIndex: number, newFoodId: string, grams: number) => void;
-  addConsultation: (patientId: string, c: { date: string; type: string; notes: string }) => void;
+  addConsultation: (patientId: string, c: { date: string; time?: string; type: string; notes: string }) => { ok: boolean; error?: string };
   deleteConsultation: (patientId: string, consultationId: string) => void;
   markUpdatesRead: () => void;
   clearUpdates: () => void;
+  changeNutriPassword: (current: string, next: string) => boolean;
+  requestPatientPasswordReset: (email: string) => { ok: boolean; patientName?: string; error?: string };
+  approvePasswordReset: (id: string) => { ok: boolean; email?: string; newPassword?: string };
+  denyPasswordReset: (id: string) => void;
 }
 
 const StoreCtx = createContext<Store | null>(null);
@@ -286,20 +301,40 @@ function loadData<T>(key: string, fallback: T): T {
 
 export function MockStoreProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session>(() => loadData<Session>(SESSION_KEY, { role: null }));
-  const initial = loadData<{ patients?: Patient[]; plans?: MealPlan[]; patientUpdates?: PatientUpdate[] }>(DATA_KEY, {});
+  const initial = loadData<{
+    patients?: Patient[]; plans?: MealPlan[]; patientUpdates?: PatientUpdate[];
+    passwordResets?: PasswordResetRequest[]; nutriPassword?: string;
+    patientPasswords?: Record<string, string>;
+  }>(DATA_KEY, {});
   const [patients, setPatients] = useState<Patient[]>(initial.patients ?? PATIENTS);
   const [plans, setPlans] = useState<MealPlan[]>(initial.plans ?? [seedPlan]);
   const [patientUpdates, setPatientUpdates] = useState<PatientUpdate[]>(initial.patientUpdates ?? []);
+  const [passwordResets, setPasswordResets] = useState<PasswordResetRequest[]>(initial.passwordResets ?? []);
+  const [nutriPassword, setNutriPassword] = useState<string>(initial.nutriPassword ?? "demo1234");
+  const [patientPasswords, setPatientPasswords] = useState<Record<string, string>>(
+    initial.patientPasswords ?? Object.fromEntries((initial.patients ?? PATIENTS).map((p) => [p.id, "demo1234"]))
+  );
 
   useEffect(() => {
     try { localStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch {}
   }, [session]);
 
   useEffect(() => {
-    try { localStorage.setItem(DATA_KEY, JSON.stringify({ patients, plans, patientUpdates })); } catch {}
+    try {
+      localStorage.setItem(DATA_KEY, JSON.stringify({
+        patients, plans, patientUpdates, passwordResets, nutriPassword, patientPasswords,
+      }));
+    } catch {}
     // light-weight cookie marker for visit persistence
     try { document.cookie = `roteiro-nutri-visited=1; max-age=${60*60*24*365}; path=/; SameSite=Lax`; } catch {}
-  }, [patients, plans, patientUpdates]);
+  }, [patients, plans, patientUpdates, passwordResets, nutriPassword, patientPasswords]);
+
+  const genPwd = () => {
+    const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+    let s = "";
+    for (let i = 0; i < 10; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
+  };
 
   const store: Store = {
     session,
@@ -307,14 +342,20 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
     patients,
     plans,
     patientUpdates,
-    loginNutri: (email) => {
+    passwordResets,
+    nutriPassword,
+    patientPasswords,
+    loginNutri: (email, password) => {
       if (!email) return false;
+      if (password !== nutriPassword) return false;
       setSession({ role: "nutricionista", nutritionistId: NUTRI.id });
       return true;
     },
-    loginPatient: (email) => {
+    loginPatient: (email, password) => {
       const p = patients.find((x) => x.email.toLowerCase() === email.toLowerCase() && x.active);
       if (!p) return null;
+      const expected = patientPasswords[p.id] ?? "demo1234";
+      if (password !== expected) return null;
       setSession({ role: "paciente", patientId: p.id });
       return p.id;
     },
@@ -330,11 +371,11 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
         avatarColor: "oklch(0.52 0.13 142)",
       };
       setPatients((prev) => [newP, ...prev]);
+      setPatientPasswords((prev) => ({ ...prev, [id]: "demo1234" }));
       return id;
     },
     updatePatient: (id, patch) => {
       setPatients((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
-      // RN04: paciente inativo não pode ter plano ativo
       if (patch.active === false) {
         setPlans((prev) => prev.map((pl) => (pl.patientId === id ? { ...pl, active: false } : pl)));
       }
@@ -424,6 +465,15 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
       );
     },
     addConsultation: (patientId, c) => {
+      // Conflict check across all patients on same date+time
+      if (c.time) {
+        const conflict = patients.some((pp) =>
+          (pp.consultations ?? []).some((cc) => cc.date === c.date && cc.time === c.time)
+        );
+        if (conflict) {
+          return { ok: false, error: `Já existe uma consulta marcada em ${c.date} às ${c.time}.` };
+        }
+      }
       const newC = { id: `c${Date.now()}`, ...c };
       setPatients((prev) =>
         prev.map((p) =>
@@ -432,6 +482,7 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
             : p
         )
       );
+      return { ok: true };
     },
     deleteConsultation: (patientId, consultationId) => {
       setPatients((prev) =>
@@ -441,6 +492,38 @@ export function MockStoreProvider({ children }: { children: ReactNode }) {
             : p
         )
       );
+    },
+    changeNutriPassword: (current, next) => {
+      if (current !== nutriPassword) return false;
+      if (!next || next.length < 6) return false;
+      setNutriPassword(next);
+      return true;
+    },
+    requestPatientPasswordReset: (email) => {
+      const p = patients.find((x) => x.email.toLowerCase() === email.toLowerCase());
+      if (!p) return { ok: false, error: "E-mail não cadastrado." };
+      // avoid duplicate pending requests
+      if (passwordResets.some((r) => r.patientId === p.id && r.status === "pendente")) {
+        return { ok: true, patientName: p.name };
+      }
+      setPasswordResets((prev) => [
+        { id: `pr${Date.now()}`, patientId: p.id, at: new Date().toISOString(), status: "pendente" },
+        ...prev,
+      ]);
+      return { ok: true, patientName: p.name };
+    },
+    approvePasswordReset: (id) => {
+      const req = passwordResets.find((r) => r.id === id);
+      if (!req) return { ok: false };
+      const pat = patients.find((p) => p.id === req.patientId);
+      if (!pat) return { ok: false };
+      const newPwd = genPwd();
+      setPatientPasswords((prev) => ({ ...prev, [req.patientId]: newPwd }));
+      setPasswordResets((prev) => prev.map((r) => (r.id === id ? { ...r, status: "aprovada", newPassword: newPwd } : r)));
+      return { ok: true, email: pat.email, newPassword: newPwd };
+    },
+    denyPasswordReset: (id) => {
+      setPasswordResets((prev) => prev.map((r) => (r.id === id ? { ...r, status: "negada" } : r)));
     },
   };
 

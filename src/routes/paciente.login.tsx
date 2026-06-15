@@ -64,7 +64,10 @@ function PatientLogin() {
               <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 bg-card" />
             </div>
             <div>
-              <Label>Senha</Label>
+              <div className="flex items-center justify-between">
+                <Label>Senha</Label>
+                <Link to="/forgot-password" className="text-xs text-primary hover:underline">Esqueci minha senha</Link>
+              </div>
               <Input type="password" required value={pwd} onChange={(e) => setPwd(e.target.value)} className="mt-1.5 bg-card" />
             </div>
             <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-leaf-deep h-12 rounded-xl">

@@ -18,11 +18,12 @@ const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: bo
 ];
 
 export function NutriShell() {
-  const { session, nutritionist, logout, patientUpdates } = useStore();
+  const { session, nutritionist, logout, patientUpdates, passwordResets } = useStore();
   const nav = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
-  const unread = patientUpdates.filter((u) => !u.read).length;
+  const pendingResets = passwordResets.filter((r) => r.status === "pendente").length;
+  const unread = patientUpdates.filter((u) => !u.read).length + pendingResets;
 
   useEffect(() => {
     if (session.role !== "nutricionista") nav({ to: "/login" });
