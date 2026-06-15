@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, MoreHorizontal, UserX, Apple } from "lucide-react";
+import { Plus, Search, UserX, Apple, FileText, RotateCcw } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/nutri/pacientes/")({
 });
 
 function PacientesList() {
-  const { patients, addPatient, deactivatePatient } = useStore();
+  const { patients, addPatient, deactivatePatient, reactivatePatient } = useStore();
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"todos" | "ativos" | "inativos">("ativos");
 
@@ -68,7 +68,7 @@ function PacientesList() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((p) => <PatientRow key={p.id} p={p} onDeactivate={() => { deactivatePatient(p.id); toast.success(`${p.name} desativado(a). Plano alimentar suspenso.`); }} />)}
+            {filtered.map((p) => <PatientRow key={p.id} p={p} onDeactivate={() => { deactivatePatient(p.id); toast.success(`${p.name} desativado(a). Plano alimentar suspenso.`); }} onReactivate={() => { reactivatePatient(p.id); toast.success(`${p.name} reativado(a). Plano anterior restaurado.`); }} />)}
             {filtered.length === 0 && (
               <tr><td colSpan={6} className="text-center py-12 text-sm text-muted-foreground">Nenhum paciente encontrado.</td></tr>
             )}
@@ -79,7 +79,7 @@ function PacientesList() {
   );
 }
 
-function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void }) {
+function PatientRow({ p, onDeactivate, onReactivate }: { p: Patient; onDeactivate: () => void; onReactivate: () => void }) {
   const { getActivePlan } = useStore();
   const activePlan = getActivePlan(p.id);
   const versionId = activePlan?.id ?? "new";
@@ -103,16 +103,23 @@ function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void 
         {p.active ? <Badge className="bg-primary/15 text-primary border-0">Ativo</Badge> : <Badge variant="outline" className="text-muted-foreground">Inativo</Badge>}
       </td>
       <td className="px-3 py-4 text-right">
-        <div className="flex justify-end gap-2">
-          <Link to="/nutri/pacientes/$id/plano/$versionId" params={{ id: p.id, versionId }}>
-            <Button variant="outline" size="sm" className="gap-1.5 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary">
-              <Apple className="h-3.5 w-3.5" /> Plano alimentar
+        <div className="flex justify-end gap-2 flex-wrap">
+          <Link to="/nutri/pacientes/$id_/ficha" params={{ id: p.id }}>
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <FileText className="h-3.5 w-3.5" /> Ficha
             </Button>
           </Link>
+          {p.active && (
+            <Link to="/nutri/pacientes/$id/plano/$versionId" params={{ id: p.id, versionId }}>
+              <Button variant="outline" size="sm" className="gap-1.5 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary">
+                <Apple className="h-3.5 w-3.5" /> Plano
+              </Button>
+            </Link>
+          )}
           <Link to="/nutri/pacientes/$id" params={{ id: p.id }}>
             <Button variant="outline" size="sm">Abrir</Button>
           </Link>
-          {p.active && (
+          {p.active ? (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive"><UserX className="h-4 w-4" /></Button>
@@ -121,7 +128,7 @@ function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void 
                 <AlertDialogHeader>
                   <AlertDialogTitle>Desativar {p.name}?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    O plano alimentar ativo será automaticamente suspenso (RN04). O paciente não poderá mais acessar o app.
+                    O plano alimentar ativo será automaticamente suspenso (RN04). O paciente não poderá mais acessar o app. Você poderá reativar depois.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -130,6 +137,10 @@ function PatientRow({ p, onDeactivate }: { p: Patient; onDeactivate: () => void 
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          ) : (
+            <Button variant="outline" size="sm" className="gap-1.5 border-primary/40 text-primary hover:bg-primary/10 hover:text-primary" onClick={onReactivate}>
+              <RotateCcw className="h-3.5 w-3.5" /> Reativar
+            </Button>
           )}
         </div>
       </td>
