@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useStore } from "@/lib/mock-store";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Printer, ClipboardList } from "lucide-react";
+import { ArrowLeft, FileDown, ClipboardList } from "lucide-react";
 import { bmi, bmiLabel } from "@/lib/nutrition";
 import { calcFood, calcMealKcal, foodIcon } from "@/lib/food-utils";
 import { getFood } from "@/lib/taco-foods";
+import { exportFichaPDF } from "@/lib/pdf-ficha";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/nutri/pacientes/$id_/ficha")({
   head: () => ({ meta: [{ title: "Ficha médica/nutricional — Roteiro Nutri" }] }),
